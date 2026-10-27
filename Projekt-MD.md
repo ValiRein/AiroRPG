@@ -42,7 +42,9 @@ Die vier Kernattribute gelten als gemeinsame Grundlage für Spieler und Monster:
 - **INT – Intelligenz:** bestimmt den Schaden von Techniken und trägt zur Abwehr von Technikschaden bei. Die Abwehr durch INT wird mit DEF kombiniert; die genaue Berechnung ist offen.
 - **SPD – Geschwindigkeit:** bestimmt die Zugreihenfolge im rundenbasierten Kampf, also wer zuerst handelt.
 
-Die Anfangslebenspunkte und weitere Ausgangswerte sind noch nicht festgelegt.
+Die Anfangslebenspunkte und weitere Ausgangswerte sind noch nicht festgelegt. Die maximalen Lebenspunkte, die ein Spieler durch Käufe erreichen kann, sind auf 5.000 HP begrenzt. Weitere HP-Käufe dürfen diesen Wert nicht überschreiten.
+
+Die vier Kernattribute STR, DEF, INT und SPD haben keine festen absoluten Maximalwerte. Ihre Entwicklung soll grundsätzlich offen bleiben; eine noch auszuarbeitende Verhältnisregel soll jedoch verhindern, dass ein einzelnes Attribut gegenüber den übrigen völlig überproportional gesteigert wird.
 
 ### Kampfabwechslung, Schadensreduzierung und Stil-XP
 
@@ -132,6 +134,8 @@ Dieser Datensatz dient als Strukturbeispiel; die Werte sind noch nicht auf Spiel
 
 - Das Spiel soll ein Levelsystem für Charaktere und Monster erhalten.
 - Die Charakterstufe wird anhand einer Berechnung der vier Kernattribute STR, DEF, INT und SPD bestimmt. Einen festen Erfahrungspunktewert, der automatisch eine höhere Stufe auslöst, gibt es nicht.
+- Für die vier Kernattribute gibt es keine festen absoluten Maximalwerte. Die Spieler sollen sie langfristig frei erhöhen können, solange die noch festzulegende Verhältnisregel eine sinnvolle Balance zwischen den Attributen wahrt.
+- Lebenspunkte sind davon getrennt: Durch Käufe kann ein Charakter höchstens 5.000 HP erreichen. Dieser Wert darf durch weitere HP-Käufe nicht überschritten werden.
 - Spielende stärken ihre Charaktere selbst, indem sie ihre verdienten Auron gezielt für Verbesserungen ausgeben. Dadurch können sich die Kernattribute verändern und damit auch die daraus berechnete Charakterstufe. Die genaue Formel für die Stufenberechnung ist noch offen und wird später gemeinsam festgelegt.
 - Die Grundstärke eines Monsters soll anhand der vier festgelegten Kernattribute STR, DEF, INT und SPD bestimmt werden.
 - Zusätzlich soll die Siegesserie des Spielenden gegen das betreffende Monster beziehungsweise die Monsterart in seinen Kampf-Instanzen die Begegnung beeinflussen.
@@ -232,11 +236,13 @@ Eine mögliche Inspiration durch Final Fantasy wurde erwähnt. Stil und konkrete
 - Die Standardwaffe jedes neuen Charakters sind nicht kaufbare und nicht ablegbare Fäuste (`Fists`) mit der Standardtechnik `DoublePunch`. Ausgerüstete Waffe sowie Waffen- und Techniklevel werden individuell in der Charakterdatei unter `[Weapons]` und `[Techs]` gespeichert.
 - Der Kauf einer Waffe rüstet sie nicht automatisch aus; zum Ausrüsten ist der Befehl `!equip weapon waffename` vorgesehen. Ein mögliches Mindestlevel für Waffen ist noch offen.
 - In der kaufbaren Technikliste dürfen nur Techniken erscheinen, die zur aktuell ausgerüsteten Waffe gehören. Die Auswahl wird anhand des Charakterspielstands und der Zuordnung in `weapons.db` gefiltert.
-- Die Anfangslebenspunkte sind noch nicht festgelegt.
+- Die Anfangslebenspunkte sind noch nicht festgelegt; die maximale durch Käufe erreichbare Lebenspunktzahl beträgt 5.000 HP.
+- Die vier Kernattribute haben keine festen absoluten Obergrenzen. Eine noch zu entwickelnde Verhältnisregel soll einseitige Verteilungen verhindern, ohne die freie Schwerpunktwahl vollständig aufzuheben.
 - Die technische Form getrennter Kämpfe und möglicher Gruppenbereiche wird später entschieden.
 
 ### Beschlossene Entscheidungen
 - Die Charakterentwicklung erfolgt durch selbst gewählte Verbesserungen, die mit verdienten Auron gekauft werden. Die Charakterstufe wird aus den vier Kernattributen berechnet und steigt daher nicht automatisch durch einen festen Erfahrungspunktewert. Die genaue Formel bleibt offen.
+- Die Kernattribute STR, DEF, INT und SPD besitzen keine festen absoluten Maximalwerte; eine Verhältnisregel soll verhindern, dass einzelne Attribute die übrigen vollständig verdrängen. Die maximale durch Käufe erreichbare Lebenspunktzahl ist auf 5.000 HP begrenzt.
 - Automatische Lebenspunktsteigerungen durch Stufenaufstieg sind nicht vorgesehen; Lebenspunkte werden bei Bedarf gezielt verbessert und mit Auron gekauft.
 - Berechtigte Käufe von Charakterwerten, Fertigkeiten, Techniken, Items und Tränken erhöhen das persönliche Shop-Level um `0.1`, bis zum Höchstwert `30`; dadurch steigen spätere Preise. Auch auf Höchstlevel bleiben Käufe möglich, ohne dass Shop-Level oder Preisaufschlag weiter steigen.
 - Das Shop-Level ist selbst der Preisaufschlag-Multiplikator. Die Formel lautet `NeuerPreis = Grundpreis * ShopLevel + Grundpreis`.
@@ -253,3 +259,5 @@ Eine mögliche Inspiration durch Final Fantasy wurde erwähnt. Stil und konkrete
 - Spielwelt, Tonalität und genaue Spielregeln.
 - Weitere Kaufregeln, Anfangswerte und Einzelheiten zur Verwendung und Vergabe der Währungen.
 - Ob berechnete Shoplisten gespeichert oder nur bei Aufruf erzeugt werden.
+- Die genaue Verhältnisregel für STR, DEF, INT und SPD sowie die mathematische Formel zur Berechnung der Charakterstufe.
+- Anfangs-HP und HP-Kaufregeln im Detail; die absolute HP-Obergrenze von 5.000 ist festgelegt.
