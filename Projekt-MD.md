@@ -69,6 +69,9 @@ Die Anfangslebenspunkte und weitere Ausgangswerte sind noch nicht festgelegt.
 - `Type` verweist auf die Waffenkategorie. `Info` enthält die Beschreibung. `Abilities` benennt die von der Waffe bereitgestellte Technik; dieser Technikname muss in `techniques.db` existieren. `Hits` und `BasePower` beschreiben die Standardtrefferzahl und Standardschadensstärke der Waffe. `Upgrade` gibt den Ätherkristallpreis für eine Waffenlevel-Erhöhung an.
 - Die Fäuste (`Fists`) sind die Standardwaffe jedes neuen Charakters. Sie sind nicht kaufbar und können nicht abgelegt werden. Der Beispielwert `Cost=1` ist ein Datenfeld; die Regel, dass diese Waffe nicht kaufbar ist, muss vom System ausdrücklich berücksichtigt werden.
 - Waffen werden mit Ätherkristallen aufgewertet. Waffen- und Rüstungskäufe beziehungsweise -aufwertungen erhöhen das Shop-Level nicht.
+- Der Kauf einer Waffe rüstet sie nicht automatisch aus. Der Spieler rüstet eine bereits besessene Waffe später ausdrücklich mit dem Befehl `!equip weapon waffename` aus.
+- Ob Waffen ein erforderliches Mindestlevel erhalten, ist noch offen. Falls diese Regel eingeführt wird, soll `weapons.db` dafür einen eigenen Schlüsselwert erhalten, beispielsweise `RequiredLevel`.
+- Beim Ausrüsten muss geprüft werden, ob der Charakter die Waffe besitzt und alle festgelegten Voraussetzungen erfüllt.
 
 Beispielstruktur für `weapons.db`:
 
@@ -95,6 +98,8 @@ Upgrade=2000
 - Unter `[Techs]` speichert der Spielstand den individuellen Level jeder Technik, beispielsweise `DoublePunch=1`.
 - Die Standardtechnik `DoublePunch` ist für jeden neuen Charakter vorgesehen und wird durch die Standardwaffe `Fists` bereitgestellt. Die Waffe verweist in `weapons.db` über `Abilities=DoublePunch` auf die Definition in `techniques.db`.
 - Allgemeine Definitionen in den Datenbanken und individuelle Level im Charakterspielstand bleiben getrennt. Die genaue Prüfung, wie Waffenlevel und Techniklevel den Kampf beeinflussen, wird später festgelegt.
+- Bei der Kaufübersicht für Techniken dürfen nur Techniken angezeigt werden, die von der aktuell ausgerüsteten Waffe bereitgestellt werden. Dafür wird die ausgerüstete Waffe aus dem Charakterspielstand gelesen und ihre Technikzuordnung aus `weapons.db` ermittelt; die passenden Technikdefinitionen werden in `techniques.db` nachgeschlagen.
+- Die genaue Umsetzung der Filterung sowie die Regeln für bereits bekannte oder aufgewertete Techniken werden beim Entwurf des Shop-Moduls festgelegt.
 
 ### Technik-Datenbank
 
@@ -220,6 +225,8 @@ Eine mögliche Inspiration durch Final Fantasy wurde erwähnt. Stil und konkrete
 - Techniken werden extern in einer Technik-Datenbank im INI-Stil definiert und über Waffenzuordnungen verfügbar gemacht; für den ersten Prototypen ist der Typ `SINGLE` vorgesehen. Technikdaten wie Trefferzahl, Grundstärke, Attribut und Beschreibung werden nicht fest im Quellcode hinterlegt.
 - Waffen werden extern in `weapons.db` definiert; Kategorien, Anzeigenamen, Waffenwerte, verfügbare Techniken und Ätherkristall-Aufwertungskosten stehen in der Datei statt im Quellcode.
 - Die Standardwaffe jedes neuen Charakters sind nicht kaufbare und nicht ablegbare Fäuste (`Fists`) mit der Standardtechnik `DoublePunch`. Ausgerüstete Waffe sowie Waffen- und Techniklevel werden individuell in der Charakterdatei unter `[Weapons]` und `[Techs]` gespeichert.
+- Der Kauf einer Waffe rüstet sie nicht automatisch aus; zum Ausrüsten ist der Befehl `!equip weapon waffename` vorgesehen. Ein mögliches Mindestlevel für Waffen ist noch offen.
+- In der kaufbaren Technikliste dürfen nur Techniken erscheinen, die zur aktuell ausgerüsteten Waffe gehören. Die Auswahl wird anhand des Charakterspielstands und der Zuordnung in `weapons.db` gefiltert.
 - Die Anfangslebenspunkte sind noch nicht festgelegt.
 - Die technische Form getrennter Kämpfe und möglicher Gruppenbereiche wird später entschieden.
 
