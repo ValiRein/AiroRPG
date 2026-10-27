@@ -44,6 +44,14 @@ Die vier Kernattribute gelten als gemeinsame Grundlage für Spieler und Monster:
 
 Die Anfangslebenspunkte und weitere Ausgangswerte sind noch nicht festgelegt.
 
+### Kampfabwechslung, Schadensreduzierung und Stil-XP
+
+- Wiederholt ein Spieler dieselbe Fähigkeit oder Technik in aufeinanderfolgenden Runden, soll der dadurch verursachte Schaden einmalig reduziert werden.
+- Die Schadensreduzierung ist nicht stapelbar: Sie soll nicht mit jeder weiteren Wiederholung immer stärker werden.
+- Die genaue Höhe der Reduzierung und die präzise Regel, wann sie ausgelöst beziehungsweise zurückgesetzt wird, sind noch offen. Als vorläufiger Vorschlag gilt, dass nur dieselbe Aktion in direkt aufeinanderfolgenden Runden die Reduzierung auslöst.
+- Diese Kampfregel ist von der Stil-XP getrennt zu berechnen. Stil-XP beeinflusst den Multiplikator für die Auron-Belohnung am Kampfende; die Schadensreduzierung beeinflusst den Schaden während des Kampfs.
+- Beide Mechaniken sollen abwechslungsreiches Spielen fördern, ohne dass ihre Formeln oder technischen Details bereits festgelegt sind.
+
 ### Datenhaltung und Grundvorlagen
 
 - Spielwerte und Vorlagen sollen nicht unnötig fest im Quellcode stehen, sondern aus strukturierten Datendateien eingelesen werden.
@@ -156,6 +164,7 @@ Eine mögliche Inspiration durch Final Fantasy wurde erwähnt. Stil und konkrete
 - Auron ist die allgemeine Spielwährung für Charakterwerte, Lebenspunkte, Fertigkeiten, Techniken, Tränke und gewöhnliche Gegenstände. Ätherkristalle sind die besondere Spielwährung für Waffen und Rüstungen. Käufe mit Ätherkristallen erhöhen das Shop-Level nicht.
 - Auron werden durch gewöhnliche Monsterkämpfe verdient; Ätherkristalle gibt es ausschließlich als Belohnung für Bosskämpfe, etwa in Boss-Instanzen. Normale Monsterkämpfe gewähren keine Ätherkristalle.
 - Die Auron-Belohnung gewöhnlicher Monsterkämpfe soll durch Stil-XP und einen daraus berechneten Multiplikator beeinflusst werden. Abwechslungsreiche, effektive Aktionen sollen die Stil-XP fördern; wiederholte Nutzung derselben Fähigkeit soll sie senken. Die genaue Formel und Umsetzung bleiben offen.
+- Die wiederholte Nutzung derselben Fähigkeit oder Technik in aufeinanderfolgenden Runden soll eine einmalige, nicht stapelbare Schadensreduzierung auslösen. Die genaue Höhe und Auslöse-/Rücksetzungsregel bleiben offen. Diese Schadensregel wird getrennt von der Stil-XP und dem Belohnungsmultiplikator behandelt.
 - Das Shop-Level wird in der jeweiligen Spielerdatendatei unter `[Info]` gespeichert.
 - Grundpreise bleiben in den Warendaten unverändert; die angezeigten Preise werden anhand des Shop-Levels berechnet.
 
