@@ -60,6 +60,33 @@ Die Anfangslebenspunkte und weitere Ausgangswerte sind noch nicht festgelegt.
 - Grundvorlagen, veränderliche individuelle Spielstände und allgemeine Regelwerte sollen logisch getrennt gehalten werden.
 - Die genaue Aufteilung der Dateien und Speicherorte wird erst beim Entwurf des Datenmodells beschlossen.
 
+### Technik-Datenbank
+
+- Techniken werden nicht fest im Quellcode definiert. Ihre Daten liegen in einer externen Technik-Datenbank, zunächst beispielsweise in der Datei `techniques.db`, die im INI-Stil aufgebaut ist und über allgemeine Lade- und Kampffunktionen eingelesen wird.
+- Die Technikzuordnung ist an die Waffe gekoppelt, mit der ein Charakter startet beziehungsweise die er verwendet. Als Beispiel ist in `[Techs]` die Zuordnung `Fists=DoublePunch` vorgesehen.
+- Jede Technik hat einen eigenen Abschnitt mit ihrer Kennung als Abschnittsnamen, beispielsweise `[DoublePunch]`. Vorgesehene Felder sind `Type`, `Hits`, `BasePower`, `BaseStats` und `Desc`.
+- Für den ersten Prototypen genügt der Techniktyp `SINGLE`. Später können weitere Typen wie `HEAL`, `AOE`, `DEAD` und `BUFF` hinzukommen.
+- `Hits` beschreibt die Trefferzahl. Für den Prototypen kann sie ein fester Wert sein; variable Trefferzahlen, etwa ein zufälliger Wert von 1 bis 8, werden später über eine festgelegte Datenstruktur umgesetzt.
+- `BasePower` ist die Grundstärke der Technik. `BaseStats` benennt das Attribut, das für die Schadensberechnung herangezogen wird, beispielsweise `str`. Die konkrete Formel und ein ausbalancierter Multiplikator sind noch offen, damit Techniken nicht unverhältnismäßig stark werden.
+- `Desc` enthält den deutschen Beschreibungstext, den der Bot bei Anwendung der Technik ausgibt. Vorgesehen sind Platzhalter wie `%enemy`, die der Bot zur Laufzeit durch passende Werte ersetzt.
+- Die Datenbank beschreibt die Technik; die allgemeine Kampflogik liest und verarbeitet diese Werte. Beliebige MSL-Ausdrücke aus Datendateien sollen nicht ungeprüft ausgeführt werden. Zulässige Werte, Zufallsbereiche und Platzhalter werden durch das System kontrolliert.
+
+Beispiel für einen ersten Datensatz:
+
+```ini
+[Techs]
+Fists=DoublePunch
+
+[DoublePunch]
+Type=SINGLE
+Hits=2
+BasePower=50
+BaseStats=str
+Desc=%enemy wird mit einem Doppelschlag angegriffen!
+```
+
+Dieser Datensatz dient als Strukturbeispiel; die Werte sind noch nicht auf Spielbalance geprüft.
+
 ### Charakterentwicklung und Monsterstärke
 
 - Das Spiel soll ein Levelsystem für Charaktere und Monster erhalten.
@@ -154,6 +181,7 @@ Eine mögliche Inspiration durch Final Fantasy wurde erwähnt. Stil und konkrete
 - Die Kernattribute STR, DEF, INT und SPD gelten für Spieler und Monster.
 - Monsterstärke soll sich aus diesen vier Kernattributen und der Siegesserie gegen die jeweilige Monsterart zusammensetzen; die Formel bleibt offen.
 - Spielwerte sollen über strukturierte Datendateien verwaltet werden; INI-Dateien und `$readini` sind als Ansatz vorgesehen.
+- Techniken werden extern in einer Technik-Datenbank im INI-Stil definiert und über Waffenzuordnungen verfügbar gemacht; für den ersten Prototypen ist der Typ `SINGLE` vorgesehen. Technikdaten wie Trefferzahl, Grundstärke, Attribut und Beschreibung werden nicht fest im Quellcode hinterlegt.
 - Die Anfangslebenspunkte sind noch nicht festgelegt.
 - Die technische Form getrennter Kämpfe und möglicher Gruppenbereiche wird später entschieden.
 
