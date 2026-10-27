@@ -60,6 +60,21 @@ Die Anfangslebenspunkte und weitere Ausgangswerte sind noch nicht festgelegt.
 - Die konkrete Formel ist noch offen und wird später mit nachvollziehbaren Beispielen entwickelt und getestet.
 - Bei der Gestaltung soll verhindert werden, dass eine unbegrenzte Steigerung der Schwierigkeit entsteht. Welche Auswirkungen Siege genau haben, ist noch nicht entschieden.
 
+### Shop-Level und Preisberechnung
+
+- Der Charakter erhält Lebenspunkte und andere Werte nicht automatisch allein durch einen Stufenaufstieg; die genaue Regel für Lebenspunkte bleibt noch offen. Die Charakterentwicklung soll insbesondere über Belohnungen und gezielte Käufe erfolgen.
+- Monster können später Belohnungen wie Münzen, andere Währungen oder besondere Gegenstände geben. Welche Währungen und Beutearten es gibt, wird noch festgelegt.
+- Im In-Game-Shop sollen unter anderem Kernattribute, Lebenspunkte, Fertigkeiten, Techniken, Items und Tränke gekauft oder verbessert werden können. Klassen und Klassenmeister sind nicht vorgesehen.
+- Berechtigte Käufe dieser Charakterverbesserungen und Verbrauchsgüter beeinflussen das persönliche Shop-Level des Spielers. Waffen und Rüstungen sind ausdrücklich ausgenommen: Sie erhalten ein eigenes, später festzulegendes Währungssystem und ein getrenntes Preissystem.
+- Das Shop-Level wird in der jeweiligen Spielerdatendatei im Abschnitt `[Info]` gespeichert, beispielsweise als `ShopLevel=0.1`. Dieser Wert ist zunächst als Fortschrittswert zu verstehen; die genaue Bedeutung und Schrittweite sind noch offen.
+- Nach einem erfolgreichen berechtigten Kauf wird das Shop-Level in der Spielerdatendatei aktualisiert. Der genaue Zuwachs pro Kauf ist noch offen.
+- Waren- und Verbesserungsdaten enthalten unveränderte Grundpreise. Beim Aufruf der Shopliste berechnet der Bot daraus anhand des Shop-Levels und eines noch festzulegenden Multiplikators die aktuellen Preise und zeigt sie beispielsweise per Privatnachricht an.
+- Die Shopliste ist eine berechnete Ausgabe. Ob berechnete Listen oder Preise zusätzlich gespeichert werden müssen, ist noch offen; Grundpreise dürfen dabei nicht überschrieben werden.
+- Der Kaufablauf muss vor Änderungen prüfen, ob der Spieler die nötige Währung besitzt. Erst ein gültiger Kauf darf die Verbesserung, den Währungsabzug und die Shop-Level-Aktualisierung auslösen. Die Umsetzung soll verhindern, dass nur ein Teil dieser Änderungen erfolgt.
+- Beispielhafte, nicht endgültige Shopausgabe bei Shop-Level 0: `STR+5 (50)`, `DEF+5 (50)`, `INT+50 (Preis noch offen)`. Zahlen und Schreibweise sind nur Beispiele.
+- Beispielhafter Befehl: `!Shop buy stats STR`. Der Bot liest den aktuellen STR-Wert aus, berechnet den neuen Wert (zum Beispiel mit `$calc(%stat-str + 5)`), prüft und zieht die Kosten ab und schreibt die aktualisierten Daten zurück. Die genaue Befehlsstruktur und Reihenfolge werden beim Entwurf festgelegt.
+- Währung, Multiplikatorformel, genaue Preissteigerung, Shop-Level-Zuwachs, Anfangswerte und genaue Dateiaufteilung sind noch offen.
+
 ## 4. Geplante Spielbereiche
 
 Bisher genannte Ideen; Umfang und Regeln sind noch nicht abschließend festgelegt:
@@ -104,6 +119,7 @@ Eine mögliche Inspiration durch Final Fantasy wurde erwähnt. Stil und konkrete
 - [ ] Konkrete Regeln für Einzelkämpfe, Gruppen und getrennte Spielinstanzen festlegen.
 - [ ] Erste kleine, spielbare Grundversion planen.
 - [ ] Modulaufteilung und Datenspeicherung entwerfen.
+- [ ] Shop-Level, Währungen, Preisberechnung und Kaufablauf weiter spezifizieren.
 - [x] Dauerhafte Spielaccounts mit strikter Nicknamenbindung als Spielregel festgelegt.
 - [x] Levelsystem und Monsteranpassung anhand von vier Kernattributen und Siegesserien als Konzept festgehalten.
 - [x] Vier Kernattribute STR, DEF, INT und SPD festgelegt.
@@ -128,7 +144,16 @@ Eine mögliche Inspiration durch Final Fantasy wurde erwähnt. Stil und konkrete
 - Die Anfangslebenspunkte sind noch nicht festgelegt.
 - Die technische Form getrennter Kämpfe und möglicher Gruppenbereiche wird später entschieden.
 
+### Beschlossene Entscheidungen
+- Die Charakterentwicklung soll über Belohnungen und Käufe erfolgen; automatische Lebenspunktsteigerungen durch Stufenaufstieg sind nicht festgelegt.
+- Berechtigte Käufe von Charakterwerten, Fertigkeiten, Techniken, Items und Tränken erhöhen das persönliche Shop-Level und beeinflussen spätere Preise.
+- Waffen und Rüstungen sind vom Shop-Level ausgenommen und erhalten ein separates, später festzulegendes Währungssystem.
+- Das Shop-Level wird in der jeweiligen Spielerdatendatei unter `[Info]` gespeichert.
+- Grundpreise bleiben in den Warendaten unverändert; die angezeigten Preise werden anhand des Shop-Levels berechnet.
+
 ### Noch offen
 - Ob Kämpfe in privaten Kanälen, getrennten Spielinstanzen oder auf andere Weise stattfinden.
 - Wie Spielende Gruppen bilden und weitere Personen einladen.
 - Spielwelt, Tonalität und genaue Spielregeln.
+- Shop-Währung(en), Multiplikatorformel, Shop-Level-Zuwachs und Kaufregeln im Detail.
+- Ob berechnete Shoplisten gespeichert oder nur bei Aufruf erzeugt werden.
