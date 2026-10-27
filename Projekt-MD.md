@@ -63,9 +63,9 @@ Die Anfangslebenspunkte und weitere Ausgangswerte sind noch nicht festgelegt.
 ### Shop-Level und Preisberechnung
 
 - Der Charakter erhält Lebenspunkte und andere Werte nicht automatisch allein durch einen Stufenaufstieg; die genaue Regel für Lebenspunkte bleibt noch offen. Die Charakterentwicklung soll insbesondere über Belohnungen und gezielte Käufe erfolgen.
-- Monster können später Belohnungen wie Münzen, andere Währungen oder besondere Gegenstände geben. Welche Währungen und Beutearten es gibt, wird noch festgelegt.
+- Monster können später Belohnungen wie Auron, Ätherkristalle oder besondere Gegenstände geben. Die genauen Beutearten und Belohnungsregeln sind noch offen.
 - Im In-Game-Shop sollen unter anderem Kernattribute, Lebenspunkte, Fertigkeiten, Techniken, Items und Tränke gekauft oder verbessert werden können. Klassen und Klassenmeister sind nicht vorgesehen.
-- Berechtigte Käufe von Charakterwerten, Fertigkeiten, Techniken, Items und Tränken erhöhen das persönliche Shop-Level des Spielers. Waffen und Rüstungen sind ausdrücklich ausgenommen: Sie erhöhen das Shop-Level nicht und erhalten ein eigenes, später festzulegendes Währungssystem und ein getrenntes Preissystem.
+- Auron ist die allgemeine Spielwährung für Charakterwerte, Lebenspunkte, Fertigkeiten, Techniken, Tränke und gewöhnliche Gegenstände. Berechtigte Käufe in diesen Bereichen erhöhen das persönliche Shop-Level des Spielers. Ätherkristalle sind die besondere Spielwährung für Waffen und Rüstungen. Deren Käufe erhöhen das Shop-Level nicht; für sie gilt ein getrenntes Preissystem.
 - Das Shop-Level ist selbst der Preisaufschlag-Multiplikator und wird in der jeweiligen Spielerdatendatei im Abschnitt `[Info]` gespeichert, beispielsweise als `ShopLevel=0.1`.
 - Nach jedem erfolgreichen berechtigten Kauf steigt das Shop-Level um `0.1`. Das maximale Shop-Level beträgt `30`; bei Erreichen des Höchstwerts steigt es nicht weiter. Käufe bleiben weiterhin möglich, aber Shop-Level und Preisaufschlag steigen nicht über diesen Höchstwert hinaus.
 - Der aktuelle Preis wird aus dem unveränderten Grundpreis und dem Shop-Level berechnet: `NeuerPreis = Grundpreis * ShopLevel + Grundpreis` (gleichbedeutend mit `Grundpreis * (1 + ShopLevel)`).
@@ -75,7 +75,7 @@ Die Anfangslebenspunkte und weitere Ausgangswerte sind noch nicht festgelegt.
 - Der Kaufablauf muss vor Änderungen prüfen, ob der Spieler die nötige Währung besitzt. Erst ein gültiger Kauf darf die Verbesserung, den Währungsabzug und die Shop-Level-Aktualisierung auslösen. Die Umsetzung soll verhindern, dass nur ein Teil dieser Änderungen erfolgt.
 - Beispielhafte, nicht endgültige Shopausgabe bei Shop-Level 0: `STR+5 (50)`, `DEF+5 (50)`, `INT+50 (Preis noch offen)`. Zahlen und Schreibweise sind nur Beispiele.
 - Beispielhafter Befehl: `!Shop buy stats STR`. Der Bot liest den aktuellen STR-Wert aus, berechnet den neuen Wert (zum Beispiel mit `$calc(%stat-str + 5)`), prüft und zieht die Kosten ab und schreibt die aktualisierten Daten zurück. Die genaue Befehlsstruktur und Reihenfolge werden beim Entwurf festgelegt.
-- Währung, Anfangswerte und genaue Dateiaufteilung sind noch offen.
+- Die Namen und grundlegenden Einsatzbereiche der beiden Währungen sind beschlossen. Anfangswerte, genaue Dateiaufteilung sowie weitere Währungs- und Kaufregeln sind noch offen.
 
 ## 4. Geplante Spielbereiche
 
@@ -121,7 +121,7 @@ Eine mögliche Inspiration durch Final Fantasy wurde erwähnt. Stil und konkrete
 - [ ] Konkrete Regeln für Einzelkämpfe, Gruppen und getrennte Spielinstanzen festlegen.
 - [ ] Erste kleine, spielbare Grundversion planen.
 - [ ] Modulaufteilung und Datenspeicherung entwerfen.
-- [ ] Shop-Level, Währungen, Preisberechnung und Kaufablauf weiter spezifizieren.
+- [ ] Kaufregeln und Kaufablauf weiter spezifizieren; die Währungsnamen und ihre grundlegenden Einsatzbereiche sind festgelegt.
 - [x] Dauerhafte Spielaccounts mit strikter Nicknamenbindung als Spielregel festgelegt.
 - [x] Levelsystem und Monsteranpassung anhand von vier Kernattributen und Siegesserien als Konzept festgehalten.
 - [x] Vier Kernattribute STR, DEF, INT und SPD festgelegt.
@@ -150,7 +150,7 @@ Eine mögliche Inspiration durch Final Fantasy wurde erwähnt. Stil und konkrete
 - Die Charakterentwicklung soll über Belohnungen und Käufe erfolgen; automatische Lebenspunktsteigerungen durch Stufenaufstieg sind nicht festgelegt.
 - Berechtigte Käufe von Charakterwerten, Fertigkeiten, Techniken, Items und Tränken erhöhen das persönliche Shop-Level um `0.1`, bis zum Höchstwert `30`; dadurch steigen spätere Preise. Auch auf Höchstlevel bleiben Käufe möglich, ohne dass Shop-Level oder Preisaufschlag weiter steigen.
 - Das Shop-Level ist selbst der Preisaufschlag-Multiplikator. Die Formel lautet `NeuerPreis = Grundpreis * ShopLevel + Grundpreis`.
-- Waffen und Rüstungen sind vom Shop-Level ausgenommen und erhalten ein separates, später festzulegendes Währungssystem; ihr Kauf erhöht das Shop-Level nicht.
+- Auron ist die allgemeine Spielwährung für Charakterwerte, Lebenspunkte, Fertigkeiten, Techniken, Tränke und gewöhnliche Gegenstände. Ätherkristalle sind die besondere Spielwährung für Waffen und Rüstungen. Käufe mit Ätherkristallen erhöhen das Shop-Level nicht.
 - Das Shop-Level wird in der jeweiligen Spielerdatendatei unter `[Info]` gespeichert.
 - Grundpreise bleiben in den Warendaten unverändert; die angezeigten Preise werden anhand des Shop-Levels berechnet.
 
@@ -158,5 +158,5 @@ Eine mögliche Inspiration durch Final Fantasy wurde erwähnt. Stil und konkrete
 - Ob Kämpfe in privaten Kanälen, getrennten Spielinstanzen oder auf andere Weise stattfinden.
 - Wie Spielende Gruppen bilden und weitere Personen einladen.
 - Spielwelt, Tonalität und genaue Spielregeln.
-- Shop-Währung(en) und Kaufregeln im Detail.
+- Weitere Kaufregeln, Anfangswerte und Einzelheiten zur Verwendung und Vergabe der Währungen.
 - Ob berechnete Shoplisten gespeichert oder nur bei Aufruf erzeugt werden.
