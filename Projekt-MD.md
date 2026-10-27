@@ -1,70 +1,89 @@
-# AiroRPG – Projekt-MD
+# AiroRPG – Projektdokumentation
 
-> Zweck: dauerhafte Projektübersicht und Übergabe-Kontext für neue ChatGPT-Unterhaltungen. Nach wichtigen Entscheidungen wird dieses Dokument aktualisiert.
+> Zweck: Diese Datei hält den verbindlichen Projektstand fest und dient dazu, die Arbeit in einer neuen ChatGPT-Unterhaltung ohne Verlust wichtiger Entscheidungen fortzusetzen.
 
 ## 1. Projektziel
 
-Ein modular aufgebauter, textbasierter RPG-Spielbot für ein bereits bestehendes IRC-Netzwerk. Anope und UnrealIRCd sind bereits eingerichtet; deren Installation und Netzwerkkonfiguration sind nicht Teil dieses Projekts.
+Entwicklung eines modularen, textbasierten Mehrspieler-Rollenspiels als IRC-Spielbot. Anope und UnrealIRCd sind bereits eingerichtet; deren Installation und Netzwerkkonfiguration sind nicht Teil dieses Projekts.
 
-Das Spiel soll über IRC-Kommandos und atmosphärische Bot-Nachrichten spielbar sein. Spielwelt, Tonalität und Umfang werden schrittweise gemeinsam festgelegt.
+Das Spiel wird über IRC-Befehle und stimmungsvolle Bot-Nachrichten bedient. Spielwelt, Atmosphäre und genaue Spielmechaniken werden schrittweise gemeinsam festgelegt.
 
-## 2. Technologie
+## 2. Sprache und technische Umgebung
 
-- Sprache: mIRC Scripting Language (MSL, auch MRC genannt).
-- Umgebung: mIRC-Scripting; genaue Laufzeit-/Hostdetails werden bei Bedarf geklärt.
-- Serverumgebung: bestehendes IRC-Netz mit Anope und UnrealIRCd.
-- Versionsverwaltung: GitHub-Repository ValiRein/AiroRPG.
+- Skriptsprache: mIRC Scripting Language (MSL, auch MRC genannt).
+- Netzwerk: bestehendes IRC-Netz mit Anope und UnrealIRCd.
+- Versionsverwaltung: GitHub, Repository ValiRein/AiroRPG.
+- Sprache des Projekts: Deutsch.
+- Sämtliche Dokumentationen, Kommentare im Quelltext, Beschreibungen, Hinweise für Spielende, Meldungen, Bezeichnungen in der Projektverwaltung und Versionsmeldungen werden auf Deutsch verfasst. Englische Fachbegriffe werden vermieden, soweit sie nicht technisch vorgegeben sind, etwa durch die Skriptsprache oder externe Schnittstellen.
 
-## 3. Geplante Spielbereiche
+## 3. Mehrspieler-Konzept
 
-Bisher genannte Ideen, noch nicht abschließend spezifiziert:
-- Rollenspiel und Charaktere
-- Quests
-- Dungeons und Monster
-- Crafting
+- Das Spiel ist von Anfang an als Mehrspieler-Spiel geplant und nicht als Einzelspieler-Spiel.
+- Mehrere Personen sollen gleichzeitig spielen können.
+- Kämpfe und andere Spielsituationen sollen voneinander getrennt sein können; die genaue technische Umsetzung ist noch offen.
+- Denkbare spätere Möglichkeiten sind persönliche Kampfbereiche, eigene Kanäle oder Gruppen, zu denen weitere Personen eingeladen werden können. Noch keine dieser Varianten ist beschlossen.
+- Die Architektur muss von Beginn an mehrere gleichzeitig aktive Spielende und voneinander unabhängige Spielinstanzen berücksichtigen.
+
+## 4. Geplante Spielbereiche
+
+Bisher genannte Ideen; Umfang und Regeln sind noch nicht abschließend festgelegt:
+- Charaktere und Rollenspiel
+- Aufgaben und Quests
+- Verliese und Monster
+- Herstellung von Gegenständen
 - Waffenwahl und Ausrüstung
-- Integrierter Shop
-- Events
+- Integrierter Laden
+- Ereignisse
 - Eigenes rundenbasiertes Kampfsystem
-- Atmosphärische Ausgaben im IRC
+- Stimmungsvolle Ausgaben im IRC
 
-Eine mögliche Final-Fantasy-Inspiration wurde erwähnt; Stil und konkrete Ausgestaltung sind noch offen.
+Eine mögliche Inspiration durch Final Fantasy wurde erwähnt. Stil und konkrete Ausgestaltung bleiben offen.
 
-## 4. Architekturprinzipien
+## 5. Architekturgrundsätze
 
-- Keine monolithische Ein-Datei-Lösung.
-- Funktionen und Systeme modular trennen.
-- Für jedes Modul klare Aufgaben sowie definierte Ein- und Ausgaben festlegen.
-- Datenfluss und Abhängigkeiten dokumentieren.
-- Änderungen in kleinen, testbaren Schritten entwickeln.
-- Bestehendes Verhalten nicht ohne Prüfung unnötig überschreiben.
+- Keine unübersichtliche Ein-Datei-Lösung.
+- Systeme und Funktionen in klar abgegrenzte Module aufteilen.
+- Für jedes Modul Aufgaben, Eingaben, Ausgaben und Abhängigkeiten dokumentieren.
+- Den Datenfluss zwischen Modulen nachvollziehbar halten.
+- Mehrere Spielende und getrennte Spielinstanzen von Anfang an berücksichtigen.
+- In kleinen, überprüfbaren Schritten entwickeln und testen.
+- Bestehendes Verhalten vor Änderungen prüfen und nicht unnötig überschreiben.
 
-## 5. Zusammenarbeit
+## 6. Zusammenarbeit
 
-- Planung und Umsetzung erfolgen schrittweise und in kleinen Portionen.
-- Pro Gesprächsrunde wird möglichst nur eine gezielte offene Frage gestellt.
-- Der Assistent soll aktiv Ideen einbringen, Architektur und Code entwerfen und bei komplexer Mathematik, Schadensformeln und Algorithmen unterstützen.
+- Wir planen und entwickeln langsam und schrittweise; pro Gesprächsrunde möglichst nur eine gezielte Frage.
+- Der Assistent bringt eigene Ideen ein, entwirft die Architektur und schreibt Code.
+- Besonders komplexe Berechnungen, Schadensformeln und mathematische Verfahren werden vom Assistenten ausgearbeitet und verständlich erklärt.
 - Der Projektverantwortliche prüft, testet und gibt Rückmeldung.
-- Annahmen, Entscheidungen, offene Fragen und Teststatus werden in diesem Dokument festgehalten.
-- GitHub-Zugriff und Änderungen werden transparent gemeldet; keine erfolgreiche Änderung behaupten, bevor das Werkzeug sie bestätigt.
+- Entscheidungen, offene Fragen, Änderungen und Testergebnisse werden in dieser Datei festgehalten.
+- GitHub-Zugriff und Änderungen werden transparent gemeldet. Eine Änderung gilt erst nach bestätigter Ausführung als erfolgt.
 
-## 6. Aktueller Stand
+## 7. Aktueller Stand
 
-- [x] Programmiersprache als MSL/MRC festgelegt.
-- [x] GitHub-Repository gefunden: ValiRein/AiroRPG.
-- [x] Lesetest erfolgreich: README.md auf dem Standardbranch main gelesen.
-- [x] Die verbundene GitHub-Integration meldet für das Repository Push-Rechte.
-- [ ] Tatsächlicher Schreibtest bzw. erster Commit bestätigt, dass Schreiben funktioniert.
-- [ ] Spielkonzept und erste spielbare Minimalversion festlegen.
-- [ ] Modulstruktur und Datenhaltung entwerfen.
+- [x] MSL/MRC als Skriptsprache festgelegt.
+- [x] GitHub-Lesezugriff erfolgreich getestet.
+- [x] GitHub-Schreibzugriff erfolgreich getestet: Diese Datei wurde angelegt, committet und danach wieder eingelesen.
+- [x] Deutsch als verbindliche Projektsprache festgelegt.
+- [x] Mehrspieler-Spiel als grundlegende Projektentscheidung festgelegt.
+- [ ] Konkrete Regeln für Einzelkämpfe, Gruppen und getrennte Spielinstanzen festlegen.
+- [ ] Erste kleine, spielbare Grundversion planen.
+- [ ] Modulaufteilung und Datenspeicherung entwerfen.
 
-## 7. Nächste Schritte
+## 8. Nächste Schritte
 
-1. Projektgrundlagen und gewünschte Spielerfahrung gemeinsam präzisieren.
-2. Eine kleine, lauffähige Minimalversion festlegen.
-3. Modulstruktur, Datenmodell und IRC-Kommandos entwerfen.
-4. In kleinen Schritten implementieren und testen.
+1. Das Mehrspieler-Konzept weiter eingrenzen.
+2. Eine kleine, spielbare erste Ausbaustufe festlegen.
+3. Modulaufteilung, Datenmodell und IRC-Befehle planen.
+4. Funktionen einzeln entwickeln und testen.
 
-## 8. Entscheidungsprotokoll
+## 9. Entscheidungsprotokoll
 
-Noch keine weiteren Entscheidungen. Offene Themen werden erst nach gemeinsamer Besprechung als beschlossen eingetragen.
+### Beschlossene Entscheidungen
+- Das Projekt und alle von uns verfassten Texte werden auf Deutsch geführt.
+- Das Spiel ist von Anfang an ein Mehrspieler-Rollenspiel.
+- Die technische Form getrennter Kämpfe und möglicher Gruppenbereiche wird später entschieden.
+
+### Noch offen
+- Ob Kämpfe in privaten Kanälen, getrennten Spielinstanzen oder auf andere Weise stattfinden.
+- Wie Spielende Gruppen bilden und weitere Personen einladen.
+- Spielwelt, Tonalität und genaue Spielregeln.
