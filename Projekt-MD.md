@@ -60,6 +60,42 @@ Die Anfangslebenspunkte und weitere Ausgangswerte sind noch nicht festgelegt.
 - Grundvorlagen, veränderliche individuelle Spielstände und allgemeine Regelwerte sollen logisch getrennt gehalten werden.
 - Die genaue Aufteilung der Dateien und Speicherorte wird erst beim Entwurf des Datenmodells beschlossen.
 
+### Waffen-Datenbank und Charakterausrüstung
+
+- Waffen werden wie Techniken nicht fest im Quellcode definiert. Ihre Daten liegen in einer externen Datei, beispielsweise `weapons.db`, im INI-Stil.
+- `[WeaponDisplayTitles]` ordnet Kategorien interne Schlüssel und deutsche Anzeigenamen für die spätere Shopliste zu, zum Beispiel `HandToHand=Handwaffen`.
+- `[Weapons]` ordnet einen Kategorienamen einer Waffenliste zu, zum Beispiel `HandToHand=Fists`. Weitere Kategorien und Waffen können später ergänzt werden.
+- Ein eigener Waffenabschnitt, beispielsweise `[Fists]`, enthält die Felder `Cost`, `Type`, `Info`, `Abilities`, `Hits`, `BasePower` und `Upgrade`.
+- `Type` verweist auf die Waffenkategorie. `Info` enthält die Beschreibung. `Abilities` benennt die von der Waffe bereitgestellte Technik; dieser Technikname muss in `techniques.db` existieren. `Hits` und `BasePower` beschreiben die Standardtrefferzahl und Standardschadensstärke der Waffe. `Upgrade` gibt den Ätherkristallpreis für eine Waffenlevel-Erhöhung an.
+- Die Fäuste (`Fists`) sind die Standardwaffe jedes neuen Charakters. Sie sind nicht kaufbar und können nicht abgelegt werden. Der Beispielwert `Cost=1` ist ein Datenfeld; die Regel, dass diese Waffe nicht kaufbar ist, muss vom System ausdrücklich berücksichtigt werden.
+- Waffen werden mit Ätherkristallen aufgewertet. Waffen- und Rüstungskäufe beziehungsweise -aufwertungen erhöhen das Shop-Level nicht.
+
+Beispielstruktur für `weapons.db`:
+
+```ini
+[WeaponDisplayTitles]
+HandToHand=Handwaffen
+
+[Weapons]
+HandToHand=Fists
+
+[Fists]
+Cost=1
+Type=HandToHand
+Info=Es sind deine Fäuste. Sie lassen sich nicht abnehmen.
+Abilities=DoublePunch
+Hits=2
+BasePower=10
+Upgrade=2000
+```
+
+### Waffen- und Technikdaten im Charakterspielstand
+
+- Der Charakterspielstand speichert unter `[Weapons]` die aktuell ausgerüstete Waffe über `Equipped=Fists` sowie den individuellen Level jeder besessenen Waffe, beispielsweise `Fists=1`.
+- Unter `[Techs]` speichert der Spielstand den individuellen Level jeder Technik, beispielsweise `DoublePunch=1`.
+- Die Standardtechnik `DoublePunch` ist für jeden neuen Charakter vorgesehen und wird durch die Standardwaffe `Fists` bereitgestellt. Die Waffe verweist in `weapons.db` über `Abilities=DoublePunch` auf die Definition in `techniques.db`.
+- Allgemeine Definitionen in den Datenbanken und individuelle Level im Charakterspielstand bleiben getrennt. Die genaue Prüfung, wie Waffenlevel und Techniklevel den Kampf beeinflussen, wird später festgelegt.
+
 ### Technik-Datenbank
 
 - Techniken werden nicht fest im Quellcode definiert. Ihre Daten liegen in einer externen Technik-Datenbank, zunächst beispielsweise in der Datei `techniques.db`, die im INI-Stil aufgebaut ist und über allgemeine Lade- und Kampffunktionen eingelesen wird.
@@ -182,6 +218,8 @@ Eine mögliche Inspiration durch Final Fantasy wurde erwähnt. Stil und konkrete
 - Monsterstärke soll sich aus diesen vier Kernattributen und der Siegesserie gegen die jeweilige Monsterart zusammensetzen; die Formel bleibt offen.
 - Spielwerte sollen über strukturierte Datendateien verwaltet werden; INI-Dateien und `$readini` sind als Ansatz vorgesehen.
 - Techniken werden extern in einer Technik-Datenbank im INI-Stil definiert und über Waffenzuordnungen verfügbar gemacht; für den ersten Prototypen ist der Typ `SINGLE` vorgesehen. Technikdaten wie Trefferzahl, Grundstärke, Attribut und Beschreibung werden nicht fest im Quellcode hinterlegt.
+- Waffen werden extern in `weapons.db` definiert; Kategorien, Anzeigenamen, Waffenwerte, verfügbare Techniken und Ätherkristall-Aufwertungskosten stehen in der Datei statt im Quellcode.
+- Die Standardwaffe jedes neuen Charakters sind nicht kaufbare und nicht ablegbare Fäuste (`Fists`) mit der Standardtechnik `DoublePunch`. Ausgerüstete Waffe sowie Waffen- und Techniklevel werden individuell in der Charakterdatei unter `[Weapons]` und `[Techs]` gespeichert.
 - Die Anfangslebenspunkte sind noch nicht festgelegt.
 - Die technische Form getrennter Kämpfe und möglicher Gruppenbereiche wird später entschieden.
 
