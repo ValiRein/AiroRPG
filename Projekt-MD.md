@@ -30,7 +30,7 @@ Das Spiel wird über IRC-Befehle und stimmungsvolle Bot-Nachrichten bedient. Spi
 - Der Spielaccount ist ausdrücklich an den aktuellen IRC-Nicknamen gebunden.
 - Wird der Nickname gewechselt, erkennt das Spielsystem den neuen Nicknamen als anderen, nicht zugeordneten Account. Auf den bisherigen Spielaccount kann unter diesem neuen Nicknamen nicht zugegriffen werden.
 - Bei Befehlen, für die ein Spielaccount erforderlich ist, wird in diesem Fall eine verständliche Fehlermeldung auf Deutsch ausgegeben.
-- Zu speichernder Fortschritt umfasst voraussichtlich Stufe, Erfahrung, Kernattribute, Ausrüstung, Inventar, Aufgabenfortschritt sowie Kampf- und Monsterstatistiken. Die genaue Datenstruktur und Speicherung sind noch offen.
+- Zu speichernder Fortschritt umfasst voraussichtlich Stufe, Kernattribute, Ausrüstung, Inventar, Aufgabenfortschritt sowie Kampf- und Monsterstatistiken. Die genaue Datenstruktur und Speicherung sind noch offen. Ein automatischer Stufenaufstieg durch das Sammeln eines bestimmten Erfahrungspunktewerts ist nicht vorgesehen.
 - Hinweis zur späteren Umsetzung: Nicknamenbindung ist eine bewusste Spielregel, aber kein sicherer Identitätsnachweis, falls Nicknamen im IRC-Netzwerk übernommen werden können. Umgang mit solchen Fällen später klären.
 
 ### Vier Kernattribute
@@ -131,6 +131,8 @@ Dieser Datensatz dient als Strukturbeispiel; die Werte sind noch nicht auf Spiel
 ### Charakterentwicklung und Monsterstärke
 
 - Das Spiel soll ein Levelsystem für Charaktere und Monster erhalten.
+- Die Charakterstufe wird anhand einer Berechnung der vier Kernattribute STR, DEF, INT und SPD bestimmt. Einen festen Erfahrungspunktewert, der automatisch eine höhere Stufe auslöst, gibt es nicht.
+- Spielende stärken ihre Charaktere selbst, indem sie ihre verdienten Auron gezielt für Verbesserungen ausgeben. Dadurch können sich die Kernattribute verändern und damit auch die daraus berechnete Charakterstufe. Die genaue Formel für die Stufenberechnung ist noch offen und wird später gemeinsam festgelegt.
 - Die Grundstärke eines Monsters soll anhand der vier festgelegten Kernattribute STR, DEF, INT und SPD bestimmt werden.
 - Zusätzlich soll die Siegesserie des Spielenden gegen das betreffende Monster beziehungsweise die Monsterart in seinen Kampf-Instanzen die Begegnung beeinflussen.
 - Die konkrete Formel ist noch offen und wird später mit nachvollziehbaren Beispielen entwickelt und getestet.
@@ -146,6 +148,7 @@ Dieser Datensatz dient als Strukturbeispiel; die Werte sind noch nicht auf Spiel
 - Im In-Game-Shop sollen unter anderem Kernattribute, Lebenspunkte, Fertigkeiten, Techniken, Items und Tränke gekauft oder verbessert werden können. Klassen und Klassenmeister sind nicht vorgesehen.
 - Auron ist die allgemeine Spielwährung für Charakterwerte, Lebenspunkte, Fertigkeiten, Techniken, Tränke und gewöhnliche Gegenstände. Berechtigte Käufe in diesen Bereichen erhöhen das persönliche Shop-Level des Spielers. Ätherkristalle sind die besondere Spielwährung für Waffen und Rüstungen. Deren Käufe erhöhen das Shop-Level nicht; für sie gilt ein getrenntes Preissystem.
 - Das Shop-Level ist selbst der Preisaufschlag-Multiplikator und wird in der jeweiligen Spielerdatendatei im Abschnitt `[Info]` gespeichert, beispielsweise als `ShopLevel=0.1`.
+- Die Charakterstufe steigt nicht automatisch durch Erfahrungspunkte. Sie ergibt sich aus einer noch festzulegenden Berechnung der vier Kernattribute STR, DEF, INT und SPD. Die Spielenden entwickeln ihren Charakter selbst, indem sie verdiente Auron in Verbesserungen investieren.
 - Nach jedem erfolgreichen berechtigten Kauf steigt das Shop-Level um `0.1`. Das maximale Shop-Level beträgt `30`; bei Erreichen des Höchstwerts steigt es nicht weiter. Käufe bleiben weiterhin möglich, aber Shop-Level und Preisaufschlag steigen nicht über diesen Höchstwert hinaus.
 - Der aktuelle Preis wird aus dem unveränderten Grundpreis und dem Shop-Level berechnet: `NeuerPreis = Grundpreis * ShopLevel + Grundpreis` (gleichbedeutend mit `Grundpreis * (1 + ShopLevel)`).
 - Beispiel bei einem Grundpreis von 50: Shop-Level `0.0` ergibt 50, `0.1` ergibt 55, `0.2` ergibt 60 und `30` ergibt 1550.
@@ -203,6 +206,7 @@ Eine mögliche Inspiration durch Final Fantasy wurde erwähnt. Stil und konkrete
 - [ ] Kaufregeln und Kaufablauf weiter spezifizieren; die Währungsnamen und ihre grundlegenden Einsatzbereiche sind festgelegt.
 - [x] Dauerhafte Spielaccounts mit strikter Nicknamenbindung als Spielregel festgelegt.
 - [x] Levelsystem und Monsteranpassung anhand von vier Kernattributen und Siegesserien als Konzept festgehalten.
+- [x] Charakterstufe wird aus den vier Kernattributen berechnet; kein automatischer Stufenaufstieg durch einen festen EP-Wert. Charaktere werden durch selbst finanzierte Verbesserungen mit verdienten Auron gestärkt.
 - [x] Vier Kernattribute STR, DEF, INT und SPD festgelegt.
 - [x] Grundwerte sollen aus strukturierten Datendateien statt ausschließlich aus fest eingebauten Quellcodewerten gelesen werden.
 
@@ -220,6 +224,7 @@ Eine mögliche Inspiration durch Final Fantasy wurde erwähnt. Stil und konkrete
 - Das Spiel ist von Anfang an ein Mehrspieler-Rollenspiel.
 - Jeder Spielaccount bleibt dauerhaft bestehen und ist an den IRC-Nicknamen gebunden; ein Nicknamenwechsel führt nicht zur automatischen Wiedererkennung des bisherigen Accounts.
 - Die Kernattribute STR, DEF, INT und SPD gelten für Spieler und Monster.
+- Die Charakterstufe ergibt sich aus einer Berechnung der vier Kernattribute; ein fester EP-Wert löst keinen automatischen Stufenaufstieg aus. Spielende stärken ihre Charaktere selbst durch Käufe mit verdienten Auron. Die genaue Stufenformel bleibt offen.
 - Monsterstärke soll sich aus diesen vier Kernattributen und der Siegesserie gegen die jeweilige Monsterart zusammensetzen; die Formel bleibt offen.
 - Spielwerte sollen über strukturierte Datendateien verwaltet werden; INI-Dateien und `$readini` sind als Ansatz vorgesehen.
 - Techniken werden extern in einer Technik-Datenbank im INI-Stil definiert und über Waffenzuordnungen verfügbar gemacht; für den ersten Prototypen ist der Typ `SINGLE` vorgesehen. Technikdaten wie Trefferzahl, Grundstärke, Attribut und Beschreibung werden nicht fest im Quellcode hinterlegt.
@@ -231,7 +236,8 @@ Eine mögliche Inspiration durch Final Fantasy wurde erwähnt. Stil und konkrete
 - Die technische Form getrennter Kämpfe und möglicher Gruppenbereiche wird später entschieden.
 
 ### Beschlossene Entscheidungen
-- Die Charakterentwicklung soll über Belohnungen und Käufe erfolgen; automatische Lebenspunktsteigerungen durch Stufenaufstieg sind nicht festgelegt.
+- Die Charakterentwicklung erfolgt durch selbst gewählte Verbesserungen, die mit verdienten Auron gekauft werden. Die Charakterstufe wird aus den vier Kernattributen berechnet und steigt daher nicht automatisch durch einen festen Erfahrungspunktewert. Die genaue Formel bleibt offen.
+- Automatische Lebenspunktsteigerungen durch Stufenaufstieg sind nicht vorgesehen; Lebenspunkte werden bei Bedarf gezielt verbessert und mit Auron gekauft.
 - Berechtigte Käufe von Charakterwerten, Fertigkeiten, Techniken, Items und Tränken erhöhen das persönliche Shop-Level um `0.1`, bis zum Höchstwert `30`; dadurch steigen spätere Preise. Auch auf Höchstlevel bleiben Käufe möglich, ohne dass Shop-Level oder Preisaufschlag weiter steigen.
 - Das Shop-Level ist selbst der Preisaufschlag-Multiplikator. Die Formel lautet `NeuerPreis = Grundpreis * ShopLevel + Grundpreis`.
 - Auron ist die allgemeine Spielwährung für Charakterwerte, Lebenspunkte, Fertigkeiten, Techniken, Tränke und gewöhnliche Gegenstände. Ätherkristalle sind die besondere Spielwährung für Waffen und Rüstungen. Käufe mit Ätherkristallen erhöhen das Shop-Level nicht.
