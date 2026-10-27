@@ -63,7 +63,10 @@ Die Anfangslebenspunkte und weitere Ausgangswerte sind noch nicht festgelegt.
 ### Shop-Level und Preisberechnung
 
 - Der Charakter erhält Lebenspunkte und andere Werte nicht automatisch allein durch einen Stufenaufstieg; die genaue Regel für Lebenspunkte bleibt noch offen. Die Charakterentwicklung soll insbesondere über Belohnungen und gezielte Käufe erfolgen.
-- Auron werden durch gewöhnliche Monsterkämpfe verdient. Ätherkristalle werden ausschließlich durch Bosskämpfe vergeben, beispielsweise in Boss-Instanzen; gewöhnliche Monsterkämpfe gewähren keine Ätherkristalle. Die genauen Mengen und weitere mögliche Belohnungen sind noch offen.
+- Auron werden durch gewöhnliche Monsterkämpfe verdient. Ätherkristalle werden ausschließlich durch Bosskämpfe vergeben, beispielsweise in Boss-Instanzen; gewöhnliche Monsterkämpfe gewähren keine Ätherkristalle.
+- Die Auron-Belohnung eines gewöhnlichen Monsterkampfs soll von der Effektivität und Abwechslung des Kampfstils abhängen. Während des Kampfs wird dafür eine sogenannte Stil-XP erfasst: Die wiederholte Nutzung derselben Fähigkeit soll sie verringern, während der abwechslungsreiche Einsatz verschiedener Aktionen – etwa Angriffe, Techniken und Gegenstände – sie erhöhen kann.
+- Am Kampfende soll aus der Stil-XP ein Multiplikator berechnet werden, der in die Berechnung der Auron-Belohnung des besiegten Monsters einfließt. Bewertungsregeln, Multiplikatorgrenzen und die genaue Belohnungsformel sowie die technische Umsetzung bleiben offen. Das System soll sinnvolle Vielfalt fördern und nicht bloß wahlloses Wechseln von Aktionen.
+- Die genauen Mengen und weitere mögliche Belohnungen sind noch offen.
 - Im In-Game-Shop sollen unter anderem Kernattribute, Lebenspunkte, Fertigkeiten, Techniken, Items und Tränke gekauft oder verbessert werden können. Klassen und Klassenmeister sind nicht vorgesehen.
 - Auron ist die allgemeine Spielwährung für Charakterwerte, Lebenspunkte, Fertigkeiten, Techniken, Tränke und gewöhnliche Gegenstände. Berechtigte Käufe in diesen Bereichen erhöhen das persönliche Shop-Level des Spielers. Ätherkristalle sind die besondere Spielwährung für Waffen und Rüstungen. Deren Käufe erhöhen das Shop-Level nicht; für sie gilt ein getrenntes Preissystem.
 - Das Shop-Level ist selbst der Preisaufschlag-Multiplikator und wird in der jeweiligen Spielerdatendatei im Abschnitt `[Info]` gespeichert, beispielsweise als `ShopLevel=0.1`.
@@ -152,6 +155,7 @@ Eine mögliche Inspiration durch Final Fantasy wurde erwähnt. Stil und konkrete
 - Das Shop-Level ist selbst der Preisaufschlag-Multiplikator. Die Formel lautet `NeuerPreis = Grundpreis * ShopLevel + Grundpreis`.
 - Auron ist die allgemeine Spielwährung für Charakterwerte, Lebenspunkte, Fertigkeiten, Techniken, Tränke und gewöhnliche Gegenstände. Ätherkristalle sind die besondere Spielwährung für Waffen und Rüstungen. Käufe mit Ätherkristallen erhöhen das Shop-Level nicht.
 - Auron werden durch gewöhnliche Monsterkämpfe verdient; Ätherkristalle gibt es ausschließlich als Belohnung für Bosskämpfe, etwa in Boss-Instanzen. Normale Monsterkämpfe gewähren keine Ätherkristalle.
+- Die Auron-Belohnung gewöhnlicher Monsterkämpfe soll durch Stil-XP und einen daraus berechneten Multiplikator beeinflusst werden. Abwechslungsreiche, effektive Aktionen sollen die Stil-XP fördern; wiederholte Nutzung derselben Fähigkeit soll sie senken. Die genaue Formel und Umsetzung bleiben offen.
 - Das Shop-Level wird in der jeweiligen Spielerdatendatei unter `[Info]` gespeichert.
 - Grundpreise bleiben in den Warendaten unverändert; die angezeigten Preise werden anhand des Shop-Levels berechnet.
 
