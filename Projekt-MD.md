@@ -33,10 +33,29 @@ Das Spiel wird über IRC-Befehle und stimmungsvolle Bot-Nachrichten bedient. Spi
 - Zu speichernder Fortschritt umfasst voraussichtlich Stufe, Erfahrung, Kernattribute, Ausrüstung, Inventar, Aufgabenfortschritt sowie Kampf- und Monsterstatistiken. Die genaue Datenstruktur und Speicherung sind noch offen.
 - Hinweis zur späteren Umsetzung: Nicknamenbindung ist eine bewusste Spielregel, aber kein sicherer Identitätsnachweis, falls Nicknamen im IRC-Netzwerk übernommen werden können. Umgang mit solchen Fällen später klären.
 
+### Vier Kernattribute
+
+Die vier Kernattribute gelten als gemeinsame Grundlage für Spieler und Monster:
+
+- **STR – Stärke:** bestimmt Stärke und Schaden von Nahkampfangriffen.
+- **DEF – Verteidigung:** bestimmt, wie viel Schaden abgewehrt werden kann.
+- **INT – Intelligenz:** bestimmt den Schaden von Techniken und trägt zur Abwehr von Technikschaden bei. Die Abwehr durch INT wird mit DEF kombiniert; die genaue Berechnung ist offen.
+- **SPD – Geschwindigkeit:** bestimmt die Zugreihenfolge im rundenbasierten Kampf, also wer zuerst handelt.
+
+Die Anfangslebenspunkte und weitere Ausgangswerte sind noch nicht festgelegt.
+
+### Datenhaltung und Grundvorlagen
+
+- Spielwerte und Vorlagen sollen nicht unnötig fest im Quellcode stehen, sondern aus strukturierten Datendateien eingelesen werden.
+- Als mögliche Grundlage sind INI-Dateien und das Einlesen über die MSL-Funktion `$readini` vorgesehen.
+- Eine Vorlage für einen neuen Standardspieler soll später die einstellbaren Ausgangswerte enthalten.
+- Grundvorlagen, veränderliche individuelle Spielstände und allgemeine Regelwerte sollen logisch getrennt gehalten werden.
+- Die genaue Aufteilung der Dateien und Speicherorte wird erst beim Entwurf des Datenmodells beschlossen.
+
 ### Charakterentwicklung und Monsterstärke
 
 - Das Spiel soll ein Levelsystem für Charaktere und Monster erhalten.
-- Die Grundstärke eines Monsters soll anhand von vier noch festzulegenden Kernattributen bestimmt werden.
+- Die Grundstärke eines Monsters soll anhand der vier festgelegten Kernattribute STR, DEF, INT und SPD bestimmt werden.
 - Zusätzlich soll die Siegesserie des Spielenden gegen das betreffende Monster beziehungsweise die Monsterart in seinen Kampf-Instanzen die Begegnung beeinflussen.
 - Die konkrete Formel ist noch offen und wird später mit nachvollziehbaren Beispielen entwickelt und getestet.
 - Bei der Gestaltung soll verhindert werden, dass eine unbegrenzte Steigerung der Schwierigkeit entsteht. Welche Auswirkungen Siege genau haben, ist noch nicht entschieden.
@@ -87,6 +106,8 @@ Eine mögliche Inspiration durch Final Fantasy wurde erwähnt. Stil und konkrete
 - [ ] Modulaufteilung und Datenspeicherung entwerfen.
 - [x] Dauerhafte Spielaccounts mit strikter Nicknamenbindung als Spielregel festgelegt.
 - [x] Levelsystem und Monsteranpassung anhand von vier Kernattributen und Siegesserien als Konzept festgehalten.
+- [x] Vier Kernattribute STR, DEF, INT und SPD festgelegt.
+- [x] Grundwerte sollen aus strukturierten Datendateien statt ausschließlich aus fest eingebauten Quellcodewerten gelesen werden.
 
 ## 8. Nächste Schritte
 
@@ -101,7 +122,10 @@ Eine mögliche Inspiration durch Final Fantasy wurde erwähnt. Stil und konkrete
 - Das Projekt und alle von uns verfassten Texte werden auf Deutsch geführt.
 - Das Spiel ist von Anfang an ein Mehrspieler-Rollenspiel.
 - Jeder Spielaccount bleibt dauerhaft bestehen und ist an den IRC-Nicknamen gebunden; ein Nicknamenwechsel führt nicht zur automatischen Wiedererkennung des bisherigen Accounts.
-- Monsterstärke soll sich aus vier Kernattributen und der Siegesserie gegen die jeweilige Monsterart zusammensetzen; die Formel bleibt offen.
+- Die Kernattribute STR, DEF, INT und SPD gelten für Spieler und Monster.
+- Monsterstärke soll sich aus diesen vier Kernattributen und der Siegesserie gegen die jeweilige Monsterart zusammensetzen; die Formel bleibt offen.
+- Spielwerte sollen über strukturierte Datendateien verwaltet werden; INI-Dateien und `$readini` sind als Ansatz vorgesehen.
+- Die Anfangslebenspunkte sind noch nicht festgelegt.
 - Die technische Form getrennter Kämpfe und möglicher Gruppenbereiche wird später entschieden.
 
 ### Noch offen
