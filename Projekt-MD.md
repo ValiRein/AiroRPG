@@ -24,6 +24,23 @@ Das Spiel wird über IRC-Befehle und stimmungsvolle Bot-Nachrichten bedient. Spi
 - Denkbare spätere Möglichkeiten sind persönliche Kampfbereiche, eigene Kanäle oder Gruppen, zu denen weitere Personen eingeladen werden können. Noch keine dieser Varianten ist beschlossen.
 - Die Architektur muss von Beginn an mehrere gleichzeitig aktive Spielende und voneinander unabhängige Spielinstanzen berücksichtigen.
 
+### Dauerhafte Spielaccounts und Nicknamenbindung
+
+- Jeder Spielende erhält einen dauerhaft gespeicherten Spielaccount mit fortbestehendem Charakter und Fortschritt.
+- Der Spielaccount ist ausdrücklich an den aktuellen IRC-Nicknamen gebunden.
+- Wird der Nickname gewechselt, erkennt das Spielsystem den neuen Nicknamen als anderen, nicht zugeordneten Account. Auf den bisherigen Spielaccount kann unter diesem neuen Nicknamen nicht zugegriffen werden.
+- Bei Befehlen, für die ein Spielaccount erforderlich ist, wird in diesem Fall eine verständliche Fehlermeldung auf Deutsch ausgegeben.
+- Zu speichernder Fortschritt umfasst voraussichtlich Stufe, Erfahrung, Kernattribute, Ausrüstung, Inventar, Aufgabenfortschritt sowie Kampf- und Monsterstatistiken. Die genaue Datenstruktur und Speicherung sind noch offen.
+- Hinweis zur späteren Umsetzung: Nicknamenbindung ist eine bewusste Spielregel, aber kein sicherer Identitätsnachweis, falls Nicknamen im IRC-Netzwerk übernommen werden können. Umgang mit solchen Fällen später klären.
+
+### Charakterentwicklung und Monsterstärke
+
+- Das Spiel soll ein Levelsystem für Charaktere und Monster erhalten.
+- Die Grundstärke eines Monsters soll anhand von vier noch festzulegenden Kernattributen bestimmt werden.
+- Zusätzlich soll die Siegesserie des Spielenden gegen das betreffende Monster beziehungsweise die Monsterart in seinen Kampf-Instanzen die Begegnung beeinflussen.
+- Die konkrete Formel ist noch offen und wird später mit nachvollziehbaren Beispielen entwickelt und getestet.
+- Bei der Gestaltung soll verhindert werden, dass eine unbegrenzte Steigerung der Schwierigkeit entsteht. Welche Auswirkungen Siege genau haben, ist noch nicht entschieden.
+
 ## 4. Geplante Spielbereiche
 
 Bisher genannte Ideen; Umfang und Regeln sind noch nicht abschließend festgelegt:
@@ -68,6 +85,8 @@ Eine mögliche Inspiration durch Final Fantasy wurde erwähnt. Stil und konkrete
 - [ ] Konkrete Regeln für Einzelkämpfe, Gruppen und getrennte Spielinstanzen festlegen.
 - [ ] Erste kleine, spielbare Grundversion planen.
 - [ ] Modulaufteilung und Datenspeicherung entwerfen.
+- [x] Dauerhafte Spielaccounts mit strikter Nicknamenbindung als Spielregel festgelegt.
+- [x] Levelsystem und Monsteranpassung anhand von vier Kernattributen und Siegesserien als Konzept festgehalten.
 
 ## 8. Nächste Schritte
 
@@ -81,6 +100,8 @@ Eine mögliche Inspiration durch Final Fantasy wurde erwähnt. Stil und konkrete
 ### Beschlossene Entscheidungen
 - Das Projekt und alle von uns verfassten Texte werden auf Deutsch geführt.
 - Das Spiel ist von Anfang an ein Mehrspieler-Rollenspiel.
+- Jeder Spielaccount bleibt dauerhaft bestehen und ist an den IRC-Nicknamen gebunden; ein Nicknamenwechsel führt nicht zur automatischen Wiedererkennung des bisherigen Accounts.
+- Monsterstärke soll sich aus vier Kernattributen und der Siegesserie gegen die jeweilige Monsterart zusammensetzen; die Formel bleibt offen.
 - Die technische Form getrennter Kämpfe und möglicher Gruppenbereiche wird später entschieden.
 
 ### Noch offen
