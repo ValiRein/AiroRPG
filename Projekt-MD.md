@@ -65,10 +65,12 @@ Die Anfangslebenspunkte und weitere Ausgangswerte sind noch nicht festgelegt.
 - Der Charakter erhält Lebenspunkte und andere Werte nicht automatisch allein durch einen Stufenaufstieg; die genaue Regel für Lebenspunkte bleibt noch offen. Die Charakterentwicklung soll insbesondere über Belohnungen und gezielte Käufe erfolgen.
 - Monster können später Belohnungen wie Münzen, andere Währungen oder besondere Gegenstände geben. Welche Währungen und Beutearten es gibt, wird noch festgelegt.
 - Im In-Game-Shop sollen unter anderem Kernattribute, Lebenspunkte, Fertigkeiten, Techniken, Items und Tränke gekauft oder verbessert werden können. Klassen und Klassenmeister sind nicht vorgesehen.
-- Berechtigte Käufe dieser Charakterverbesserungen und Verbrauchsgüter beeinflussen das persönliche Shop-Level des Spielers. Waffen und Rüstungen sind ausdrücklich ausgenommen: Sie erhalten ein eigenes, später festzulegendes Währungssystem und ein getrenntes Preissystem.
-- Das Shop-Level wird in der jeweiligen Spielerdatendatei im Abschnitt `[Info]` gespeichert, beispielsweise als `ShopLevel=0.1`. Dieser Wert ist zunächst als Fortschrittswert zu verstehen; die genaue Bedeutung und Schrittweite sind noch offen.
-- Nach einem erfolgreichen berechtigten Kauf wird das Shop-Level in der Spielerdatendatei aktualisiert. Der genaue Zuwachs pro Kauf ist noch offen.
-- Waren- und Verbesserungsdaten enthalten unveränderte Grundpreise. Beim Aufruf der Shopliste berechnet der Bot daraus anhand des Shop-Levels und eines noch festzulegenden Multiplikators die aktuellen Preise und zeigt sie beispielsweise per Privatnachricht an.
+- Berechtigte Käufe von Charakterwerten, Fertigkeiten, Techniken, Items und Tränken erhöhen das persönliche Shop-Level des Spielers. Waffen und Rüstungen sind ausdrücklich ausgenommen: Sie erhöhen das Shop-Level nicht und erhalten ein eigenes, später festzulegendes Währungssystem und ein getrenntes Preissystem.
+- Das Shop-Level ist selbst der Preisaufschlag-Multiplikator und wird in der jeweiligen Spielerdatendatei im Abschnitt `[Info]` gespeichert, beispielsweise als `ShopLevel=0.1`.
+- Nach jedem erfolgreichen berechtigten Kauf steigt das Shop-Level um `0.1`. Das maximale Shop-Level beträgt `25`; bei Erreichen des Höchstwerts steigt es nicht weiter.
+- Der aktuelle Preis wird aus dem unveränderten Grundpreis und dem Shop-Level berechnet: `NeuerPreis = Grundpreis * ShopLevel + Grundpreis` (gleichbedeutend mit `Grundpreis * (1 + ShopLevel)`).
+- Beispiel bei einem Grundpreis von 50: Shop-Level `0.0` ergibt 50, `0.1` ergibt 55, `0.2` ergibt 60 und `25` ergibt 1300.
+- Waren- und Verbesserungsdaten enthalten unveränderte Grundpreise. Beim Aufruf der Shopliste berechnet der Bot anhand des aktuellen Shop-Levels die aktuellen Preise und zeigt sie beispielsweise per Privatnachricht an.
 - Die Shopliste ist eine berechnete Ausgabe. Ob berechnete Listen oder Preise zusätzlich gespeichert werden müssen, ist noch offen; Grundpreise dürfen dabei nicht überschrieben werden.
 - Der Kaufablauf muss vor Änderungen prüfen, ob der Spieler die nötige Währung besitzt. Erst ein gültiger Kauf darf die Verbesserung, den Währungsabzug und die Shop-Level-Aktualisierung auslösen. Die Umsetzung soll verhindern, dass nur ein Teil dieser Änderungen erfolgt.
 - Beispielhafte, nicht endgültige Shopausgabe bei Shop-Level 0: `STR+5 (50)`, `DEF+5 (50)`, `INT+50 (Preis noch offen)`. Zahlen und Schreibweise sind nur Beispiele.
@@ -146,8 +148,9 @@ Eine mögliche Inspiration durch Final Fantasy wurde erwähnt. Stil und konkrete
 
 ### Beschlossene Entscheidungen
 - Die Charakterentwicklung soll über Belohnungen und Käufe erfolgen; automatische Lebenspunktsteigerungen durch Stufenaufstieg sind nicht festgelegt.
-- Berechtigte Käufe von Charakterwerten, Fertigkeiten, Techniken, Items und Tränken erhöhen das persönliche Shop-Level und beeinflussen spätere Preise.
-- Waffen und Rüstungen sind vom Shop-Level ausgenommen und erhalten ein separates, später festzulegendes Währungssystem.
+- Berechtigte Käufe von Charakterwerten, Fertigkeiten, Techniken, Items und Tränken erhöhen das persönliche Shop-Level um `0.1`, bis zum Höchstwert `25`; dadurch steigen spätere Preise.
+- Das Shop-Level ist selbst der Preisaufschlag-Multiplikator. Die Formel lautet `NeuerPreis = Grundpreis * ShopLevel + Grundpreis`.
+- Waffen und Rüstungen sind vom Shop-Level ausgenommen und erhalten ein separates, später festzulegendes Währungssystem; ihr Kauf erhöht das Shop-Level nicht.
 - Das Shop-Level wird in der jeweiligen Spielerdatendatei unter `[Info]` gespeichert.
 - Grundpreise bleiben in den Warendaten unverändert; die angezeigten Preise werden anhand des Shop-Levels berechnet.
 
@@ -155,5 +158,5 @@ Eine mögliche Inspiration durch Final Fantasy wurde erwähnt. Stil und konkrete
 - Ob Kämpfe in privaten Kanälen, getrennten Spielinstanzen oder auf andere Weise stattfinden.
 - Wie Spielende Gruppen bilden und weitere Personen einladen.
 - Spielwelt, Tonalität und genaue Spielregeln.
-- Shop-Währung(en), Multiplikatorformel, Shop-Level-Zuwachs und Kaufregeln im Detail.
+- Shop-Währung(en) und Kaufregeln im Detail.
 - Ob berechnete Shoplisten gespeichert oder nur bei Aufruf erzeugt werden.
