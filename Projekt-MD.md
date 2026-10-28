@@ -132,6 +132,16 @@ Dieser Datensatz dient als Strukturbeispiel; die Werte sind noch nicht auf Spiel
 
 ### Charakterentwicklung und Monsterstärke
 
+### Zentrale Levelberechnung: `$get.level($1)`
+
+- `$get.level($1)` ist der allgemeine Helfer für Levelabfragen und Levelberechnungen. Er speichert kein eigenes Level, sondern berechnet bei jedem Aufruf das aktuell gültige Level neu und gibt es zurück.
+- Die Funktion verwendet die aktuellen Werte aus dem Abschnitt `[Battle]` des Charakterspielstands. Dadurch können temporäre Buffs und Debuffs das berechnete Level während eines Kampfes beeinflussen.
+- Vorgesehene Attributwirkungen umfassen beispielsweise `StrUP`, `DefUP`, `IntUP`, `SpdUP` sowie die entsprechenden Debuffs `StrDown`, `DefDown`, `IntDown` und `SpdDown`.
+- Andere Spielmechaniken können den zurückgegebenen Levelwert weiterverwenden, beispielsweise Kampfberechnungen, Buffs, Debuffs oder Prüfungen von Voraussetzungen.
+- Nach dem Kampf werden die Werte in `[Battle]` wieder mit den dauerhaften Werten aus `[BaseStats]` synchronisiert. Dadurch ergibt die nächste Berechnung wieder das Level, das sich aus den dann gültigen Werten ergibt.
+- Die interne Levelkurve, die genaue Verwendung von `floor` und `StatWeight` sowie die Gewichtungsgrenzen sind noch offen und werden separat entwickelt und mit Beispielcharakteren getestet.
+- Eine Attributänderung führt nicht zwingend zu einer Leveländerung; das Ergebnis hängt von der später festgelegten Berechnungsformel ab.
+
 - Das Spiel soll ein Levelsystem für Charaktere und Monster erhalten.
 - Die Charakterstufe wird anhand einer Berechnung der vier Kernattribute STR, DEF, INT und SPD bestimmt. Einen festen Erfahrungspunktewert, der automatisch eine höhere Stufe auslöst, gibt es nicht.
 - Für die vier Kernattribute gibt es keine festen absoluten Maximalwerte. Die Spieler sollen sie langfristig frei erhöhen können, solange die noch festzulegende Verhältnisregel eine sinnvolle Balance zwischen den Attributen wahrt.
@@ -215,6 +225,7 @@ Eine mögliche Inspiration durch Final Fantasy wurde erwähnt. Stil und konkrete
 - [x] Levelsystem und Monsteranpassung anhand von vier Kernattributen und Siegesserien als Konzept festgehalten.
 - [x] Charakterstufe wird aus den vier Kernattributen berechnet; kein automatischer Stufenaufstieg durch einen festen EP-Wert. Charaktere werden durch selbst finanzierte Verbesserungen mit verdienten Auron gestärkt.
 - [x] Vier Kernattribute STR, DEF, INT und SPD festgelegt.
+- [x] Allgemeine Level-Funktion `$get.level($1)` festgelegt: Sie berechnet das aktuelle Level aus `[Battle]`; die konkrete Formel bleibt offen.
 - [x] Grundwerte sollen aus strukturierten Datendateien statt ausschließlich aus fest eingebauten Quellcodewerten gelesen werden.
 
 ## 8. Nächste Schritte
@@ -232,6 +243,7 @@ Eine mögliche Inspiration durch Final Fantasy wurde erwähnt. Stil und konkrete
 - Jeder Spielaccount bleibt dauerhaft bestehen und ist an den IRC-Nicknamen gebunden; ein Nicknamenwechsel führt nicht zur automatischen Wiedererkennung des bisherigen Accounts.
 - Die Kernattribute STR, DEF, INT und SPD gelten für Spieler und Monster.
 - Die Charakterstufe ergibt sich aus einer Berechnung der vier Kernattribute; ein fester EP-Wert löst keinen automatischen Stufenaufstieg aus. Spielende stärken ihre Charaktere selbst durch Käufe mit verdienten Auron. Die genaue Stufenformel bleibt offen.
+- Die zentrale Funktion `$get.level($1)` berechnet bei jedem Aufruf das aktuelle Level anhand der aktuellen `[Battle]`-Werte und gibt es zurück, ohne das Level separat zu speichern. Buffs und Debuffs können dadurch das berechnete Level vorübergehend beeinflussen. Die genaue Levelkurve und `StatWeight`-Formel bleiben offen.
 - Monsterstärke soll sich aus diesen vier Kernattributen und der Siegesserie gegen die jeweilige Monsterart zusammensetzen; die Formel bleibt offen.
 - Spielwerte sollen über strukturierte Datendateien verwaltet werden; INI-Dateien und `$readini` sind als Ansatz vorgesehen.
 - Techniken werden extern in einer Technik-Datenbank im INI-Stil definiert und über Waffenzuordnungen verfügbar gemacht; für den ersten Prototypen ist der Typ `SINGLE` vorgesehen. Technikdaten wie Trefferzahl, Grundstärke, Attribut und Beschreibung werden nicht fest im Quellcode hinterlegt.
