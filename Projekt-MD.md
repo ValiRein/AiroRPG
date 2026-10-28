@@ -284,7 +284,7 @@ Eine mögliche Inspiration durch Final Fantasy wurde erwähnt. Stil und konkrete
 ### Umfang des ersten spielbaren Prototyps
 
 - Der erste Prototyp umfasst Charakterregistrierung mit Charakterbeschreibung und Statuswerten, Standardausrüstung (Fäuste und `DoublePunch`), bis zu fünf zufällig ausgewählte einfache Monsterarten, ein grundlegendes rundenbasiertes Kampfsystem, Sieg und Niederlage, Auron-Belohnungen sowie externe Dateien für Kampf- und Systemmeldungen.
-- Die Siegesserie gegen eine Monsterart soll bereits im Prototyp pro Spielendem erfasst und bei der Generierung späterer Monster derselben Art berücksichtigt werden. Monsterlevel und Kernattribute können dadurch schrittweise steigen; die genaue Formel und Grenzen bleiben offen.
+- Die allgemeine Siegesserie jedes Spielenden soll bereits im Prototyp erfasst werden. Sie wird in der Charakterdatei unter `[Info]` als `BattleStreak` gespeichert, startet bei `0`, steigt bei jedem Sieg unabhängig von der Monsterart um `1` und wird bei einer Niederlage auf `0` zurückgesetzt. Sie beeinflusst die Stärke künftig erzeugter Monster; die genaue Formel und Grenzen bleiben offen.
 - Der Shop wird erst in einer späteren Ausbaustufe ergänzt.
 
 ### Noch offen
