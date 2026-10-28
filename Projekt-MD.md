@@ -176,6 +176,19 @@ Dieser Datensatz dient als Strukturbeispiel; die Werte sind noch nicht auf Spiel
 - Beispielhafter Befehl: `!Shop buy stats STR`. Der Bot liest den aktuellen STR-Wert aus, berechnet den neuen Wert (zum Beispiel mit `$calc(%stat-str + 5)`), prüft und zieht die Kosten ab und schreibt die aktualisierten Daten zurück. Die genaue Befehlsstruktur und Reihenfolge werden beim Entwurf festgelegt.
 - Die Namen und grundlegenden Einsatzbereiche der beiden Währungen sind beschlossen. Anfangswerte, genaue Dateiaufteilung sowie weitere Währungs- und Kaufregeln sind noch offen.
 
+## 3.1 Umfang des ersten spielbaren Prototyps
+
+Der erste Prototyp soll einen kleinen, aber bereits spielbaren Mehrspieler-Kern enthalten. Weitere Systeme wie der Shop werden später ergänzt.
+
+- **Charakterregistrierung:** Spielende können einen Charakter registrieren. Der Spielstand enthält unter anderem den Charakternamen, die Charakterbeschreibung, Statuswerte und die erforderlichen Anfangswerte.
+- **Standardausrüstung:** Jeder neue Charakter erhält die Standardwaffe `Fists` (Fäuste) sowie die Technik `DoublePunch` mit einem festgelegten Anfangslevel. Die genauen Startwerte und das Anfangslevel werden bei der Ausarbeitung des Datenmodells bestätigt.
+- **Monster-Auswahl:** Für den Prototypen sind zunächst höchstens fünf einfache Monsterarten vorgesehen. Bei einer Begegnung wird zufällig eine dieser Arten ausgewählt.
+- **Rundenbasierter Kampf:** Der Prototyp umfasst einfache Angriffe, die Standardtechnik, die Berechnung von Schaden und Zugreihenfolge sowie die Verarbeitung von Sieg und Niederlage.
+- **Monsterentwicklung durch Siegesserien:** Siege gegen eine bestimmte Monsterart werden pro Spielendem und Monsterart erfasst. Diese Siegesserie beeinflusst die Generierung späterer Monster derselben Art. Dadurch können deren berechnetes Level und Kernattribute schrittweise steigen. Die genaue Formel, Gewichtung, Grenzen und der Umgang mit einer Niederlage sind noch offen und werden getestet.
+- **Belohnung:** Ein Sieg gewährt zunächst Auron. Die genaue Höhe der Belohnung ist noch festzulegen. Ätherkristalle werden im Einklang mit der bestehenden Regel ausschließlich durch Bosskämpfe vergeben; gewöhnliche Monsterkämpfe gewähren keine Ätherkristalle.
+- **Externe Meldungen und Beschreibungen:** Kampfmeldungen, Systemmeldungen, Fehlermeldungen und Monsterbeschreibungen sollen in den jeweils zuständigen Datendateien liegen und nicht fest in den MSL-Quellcode geschrieben werden.
+- **Erweiterbarkeit:** Der Shop und weitere geplante Systeme gehören nicht zum ersten Prototypen. Die Modul- und Datenstruktur soll ihre spätere Ergänzung ermöglichen, ohne den vorhandenen Kern unnötig umzubauen.
+
 ## 4. Geplante Spielbereiche
 
 Bisher genannte Ideen; Umfang und Regeln sind noch nicht abschließend festgelegt:
@@ -267,6 +280,12 @@ Eine mögliche Inspiration durch Final Fantasy wurde erwähnt. Stil und konkrete
 - Die wiederholte Nutzung derselben Fähigkeit oder Technik in aufeinanderfolgenden Runden soll eine einmalige, nicht stapelbare Schadensreduzierung auslösen. Die genaue Höhe und Auslöse-/Rücksetzungsregel bleiben offen. Diese Schadensregel wird getrennt von der Stil-XP und dem Belohnungsmultiplikator behandelt.
 - Das Shop-Level wird in der jeweiligen Spielerdatendatei unter `[Info]` gespeichert.
 - Grundpreise bleiben in den Warendaten unverändert; die angezeigten Preise werden anhand des Shop-Levels berechnet.
+
+### Umfang des ersten spielbaren Prototyps
+
+- Der erste Prototyp umfasst Charakterregistrierung mit Charakterbeschreibung und Statuswerten, Standardausrüstung (Fäuste und `DoublePunch`), bis zu fünf zufällig ausgewählte einfache Monsterarten, ein grundlegendes rundenbasiertes Kampfsystem, Sieg und Niederlage, Auron-Belohnungen sowie externe Dateien für Kampf- und Systemmeldungen.
+- Die Siegesserie gegen eine Monsterart soll bereits im Prototyp pro Spielendem erfasst und bei der Generierung späterer Monster derselben Art berücksichtigt werden. Monsterlevel und Kernattribute können dadurch schrittweise steigen; die genaue Formel und Grenzen bleiben offen.
+- Der Shop wird erst in einer späteren Ausbaustufe ergänzt.
 
 ### Noch offen
 - Ob Kämpfe in privaten Kanälen, getrennten Spielinstanzen oder auf andere Weise stattfinden.
