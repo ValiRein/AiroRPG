@@ -262,12 +262,16 @@ Eine mögliche Inspiration durch Final Fantasy wurde erwähnt. Stil und konkrete
 - Spielwerte sollen über strukturierte Datendateien verwaltet werden; INI-Dateien und `$readini` sind als Ansatz vorgesehen.
 - Techniken werden extern in einer Technik-Datenbank im INI-Stil definiert und über Waffenzuordnungen verfügbar gemacht; für den ersten Prototypen ist der Typ `SINGLE` vorgesehen. Technikdaten wie Trefferzahl, Grundstärke, Attribut und Beschreibung werden nicht fest im Quellcode hinterlegt.
 - Waffen werden extern in `weapons.db` definiert; Kategorien, Anzeigenamen, Waffenwerte, verfügbare Techniken und Ätherkristall-Aufwertungskosten stehen in der Datei statt im Quellcode.
+- Monsterdefinitionen werden als Dateien im Verzeichnis `/monsters/` gespeichert und sind ähnlich wie Charakterdateien aufgebaut. `/monsters/to_make/new_mon.char` ist nur die allgemeine Vorlage zur Erstellung neuer Monsterdefinitionen; sie wird nicht direkt als laufendes Monster verwendet. Eine daraus erstellte Datei, zum Beispiel `/monsters/Schattenwolf.char`, enthält die Grundwerte des jeweiligen Monsters. Bei der Erzeugung eines Kampfmonsters wird diese Definition in den Unterordner der zugehörigen Kampfinstanz kopiert; nur die Kopie wird verändert. Das Original bleibt unberührt.
+- Monsterdateien verwenden `[Info]` mit `Flag=monster`, damit das System sie von Spielerdaten unterscheiden kann. `[BaseStats]` enthält die Grundwerte, `[Battle]` die veränderlichen Kampfwerte einschließlich des Monsterstatus wie `Status=alive`. `[Descriptions]` enthält Erscheinungs- und Todesmeldungen, `[Stuff]` unter anderem die Auron-Belohnung, `[monster]` die Monsterart beziehungsweise Rasse und `[Weapons]` sowie `[Techniques]` die Monsterwaffe und dazu passende Techniken. Monsterwaffen und Techniken müssen in den jeweiligen externen Datenbanken definiert sein.
+- Die Grundwerte der Monsterdefinition entsprechen der Basis für ein Monster der Zielstufe `1`. Bei `BattleStreak=0` muss das erste erzeugte Monster Zielstufe `1` haben; die Erzeugung darf nicht allein durch die anfänglichen Attribute versehentlich ein Monster der Stufe `5`, `10` oder `20` ergeben. Die genaue Attributskalierung für höhere Zielstufen bleibt offen und wird mit `$get.level($1)` getestet.
 - Die Standardwaffe jedes neuen Charakters sind nicht kaufbare und nicht ablegbare Fäuste (`Fists`) mit der Standardtechnik `DoublePunch`. Ausgerüstete Waffe sowie Waffen- und Techniklevel werden individuell in der Charakterdatei unter `[Weapons]` und `[Techs]` gespeichert.
 - Der Kauf einer Waffe rüstet sie nicht automatisch aus; zum Ausrüsten ist der Befehl `!equip weapon waffename` vorgesehen. Ein mögliches Mindestlevel für Waffen ist noch offen.
 - In der kaufbaren Technikliste dürfen nur Techniken erscheinen, die zur aktuell ausgerüsteten Waffe gehören. Die Auswahl wird anhand des Charakterspielstands und der Zuordnung in `weapons.db` gefiltert.
 - Die Anfangslebenspunkte sind noch nicht festgelegt; die maximale durch Käufe erreichbare Lebenspunktzahl beträgt 5.000 HP.
 - Die vier Kernattribute haben keine festen absoluten Obergrenzen. Eine noch zu entwickelnde Verhältnisregel soll einseitige Verteilungen verhindern, ohne die freie Schwerpunktwahl vollständig aufzuheben.
 - Als vorläufige Architekturentscheidung erhält jeder Spielende eine eigene Kampfinstanz. Gruppen mit gemeinsamer Kampfinstanz können später ergänzt werden. Ob die Einzelinstanzen unter gleichzeitiger Last flüssig laufen, wird im Prototyp getestet; bei Leistungsproblemen wird die Architektur anhand der Testergebnisse neu bewertet.
+- Jede Kampfinstanz erhält eine eindeutige interne ID und einen eigenen Unterordner unter `/battles/`. Dort liegen die veränderlichen kampfspezifischen Daten, darunter eine Kopie des erzeugten Monsters und eine Datei für den Kampfzustand. Dauerhafte Spielerdaten verbleiben unter `/characters/`; Monsterdefinitionen unter `/monsters/` bleiben unverändert. Die Zahl gleichzeitig laufender Einzelkämpfe und mögliche Verzögerungen werden im Prototyp getestet. Erst bei nachgewiesenen Leistungsproblemen wird die Architektur neu bewertet; Gruppenkämpfe können später als gemeinsame Kampfinstanz ergänzt werden.
 
 ### Beschlossene Entscheidungen
 - Die Charakterentwicklung erfolgt durch selbst gewählte Verbesserungen, die mit verdienten Auron gekauft werden. Die Charakterstufe wird aus den vier Kernattributen berechnet und steigt daher nicht automatisch durch einen festen Erfahrungspunktewert. Die genaue Formel bleibt offen.
@@ -289,7 +293,7 @@ Eine mögliche Inspiration durch Final Fantasy wurde erwähnt. Stil und konkrete
 - Der Shop wird erst in einer späteren Ausbaustufe ergänzt.
 
 ### Noch offen
-- Ob Kämpfe in privaten Kanälen, getrennten Spielinstanzen oder auf andere Weise stattfinden.
+- Wie Gruppen gebildet werden und wie Spielende weitere Personen einladen; Gruppenkämpfe sind als spätere gemeinsame Kampfinstanzen vorgesehen.
 - Wie Spielende Gruppen bilden und weitere Personen einladen.
 - Spielwelt, Tonalität und genaue Spielregeln.
 - Weitere Kaufregeln, Anfangswerte und Einzelheiten zur Verwendung und Vergabe der Währungen.
