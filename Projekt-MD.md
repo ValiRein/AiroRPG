@@ -388,10 +388,10 @@ Dieser Abschnitt dokumentiert die bisher gemeinsam festgelegten Regeln für das 
 - Das Einzelgewicht jedes Items wird aus dessen `Weight`-Wert in `Items.db` gelesen. Das Gesamtgewicht ergibt sich aus der Summe aus Menge mal Einzelgewicht aller gewichtspflichtigen Inventargegenstände.
 - Waffen und Rüstungen zählen nicht zur Traglast. Sie werden getrennt vom normalen Inventar gespeichert und belasten die Traglast nicht.
 - Nach jeder erfolgreich durchgeführten Inventaränderung wird das Gesamtgewicht vollständig anhand der aktuellen Inventarmengen und der Item-Gewichte aus `Items.db` neu berechnet und in der Spielerdatei aktualisiert. Das gilt unter anderem für Sammeln, Monsterbelohnungen, Kaufen, Verkaufen, Verwenden, Wegwerfen und Crafting-Verbrauch beziehungsweise Crafting-Ergebnis.
-- Die Gewichtsberechnung soll zentral als wiederverwendbarer Helfer umgesetzt werden, beispielsweise `inventory.weight.update($nick)`. Die aufrufenden Inventarfunktionen sollen nicht jeweils eine eigene Gewichtsberechnung enthalten.
+- Die Gewichtsberechnung soll zentral als wiederverwendbarer Helfer umgesetzt werden, beispielsweise `inventory.weight.update($spieler)`. Die aufrufenden Inventarfunktionen sollen nicht jeweils eine eigene Gewichtsberechnung enthalten.
 - Eine fehlgeschlagene oder abgelehnte Inventaraktion verändert weder die Gegenstandsmengen noch das gespeicherte Gesamtgewicht.
-- Die Traglastprüfung soll ebenfalls zentral umgesetzt werden. Der vorgesehene Aufruf verwendet den Spielernamen sowie lokale Variablen für Item und Menge, beispielsweise `inventory.capacity.check($nick,%item,%amount)`. `%item` und `%amount` sind dabei zuvor definierte Variablen der aufrufenden Funktion; sie sind keine automatisch vorhandenen Funktionen.
-- Als allgemeine zentrale Aufnahmefunktion ist `inventory.item.add($nick,%item,%amount)` vorgesehen. Sie soll die Item-Definition prüfen, die Traglast kontrollieren, einen noch nicht vorhandenen Eintrag anlegen oder einen bestehenden Mengenwert erhöhen und anschließend das Gesamtgewicht aktualisieren. Die genaue Rückgabe- und Fehlerstruktur wird beim Implementieren festgelegt.
+- Die Traglastprüfung soll ebenfalls zentral umgesetzt werden. Der vorgesehene Aufruf verwendet den Spielernamen sowie lokale Variablen für Item und Menge, beispielsweise `inventory.capacity.check($spieler,%item,%amount)`. `%item` und `%amount` sind dabei zuvor definierte Variablen der aufrufenden Funktion; sie sind keine automatisch vorhandenen Funktionen.
+- Als allgemeine zentrale Aufnahmefunktion ist `inventory.item.add($spieler,%item,%amount)` vorgesehen. Sie soll die Item-Definition prüfen, die Traglast kontrollieren, einen noch nicht vorhandenen Eintrag anlegen oder einen bestehenden Mengenwert erhöhen und anschließend das Gesamtgewicht aktualisieren. Die genaue Rückgabe- und Fehlerstruktur wird beim Implementieren festgelegt.
 
 ### Verhalten bei voller Traglast und Belohnungen
 
@@ -535,11 +535,20 @@ alias check.char {
 
 ### Aufrufbeispiel
 
+Direkt in einem IRC-Event ist `$nick` verfügbar und kann an den Helper übergeben werden:
+
 ```mirc
-var %section = $check.char($nick,Inventar)
+on *:TEXT:!drop all:#:{
+  var %nick = $nick
+  var %section = $check.char(%nick,Inventar)
+
+  if (%section == $null) { return }
+
+  ; Erst ab hier darf die aufrufende Funktion die Section bearbeiten.
+}
 ```
 
-Der aufrufende Code muss prüfen, ob `%section` einen Rückgabewert enthält, bevor er mit der Section arbeitet. Beispielsweise kann `!drop all` den Helfer verwenden, um die Existenz von `[Inventar]` zu prüfen, bevor die Einträge dieser Section verarbeitet werden.
+Der aufrufende Code muss prüfen, ob der Helper einen Rückgabewert enthält, bevor er mit der Section arbeitet. Bei einem fehlenden Rückgabewert muss der gesamte Änderungsvorgang abgebrochen werden.
 
 ### Zuständigkeit und Status
 
@@ -548,3 +557,40 @@ Der aufrufende Code muss prüfen, ob `%section` einen Rückgabewert enthält, be
 - Die Prüfung auf `$null` und `0` berücksichtigt unterschiedliche Rückgaben von `$ini()`, wenn eine Section nicht gefunden wird.
 - Die hier dokumentierte Fassung ist der gemeinsam bestätigte Planungsstand. Vor einer produktiven Verwendung muss sie im MSL-Quellcode implementiert und getestet werden.
 
+
+
+## 13. Spielerparameter in eigenen Helpern
+
+Für alle eigenen Helper gilt eine einheitliche Regel: Ein Helper darf sich nicht darauf verlassen, dass `$nick` verfügbar ist oder den richtigen Spieler bezeichnet. `$nick` gehört zum jeweiligen IRC-Event-Kontext, beispielsweise innerhalb eines `on *:TEXT:`-Events. Ein eigenständiger Alias muss dagegen unabhängig vom aufrufenden Kontext funktionieren.
+
+- Der IRC-Event-Code liest den Spieler über `$nick` aus und übergibt ihn ausdrücklich als Parameter an den ersten Helper.
+- Innerhalb eines eigenen Aliases wird der übergebene Spielername über `$1` verwendet, sofern er der erste Parameter ist.
+- Ruft dieser Alias einen weiteren Helper auf, muss er den Spielernamen ausdrücklich weiterreichen, beispielsweise mit `$1`.
+- Schreibzugriffe auf Spielerdateien innerhalb eines Helpers verwenden daher den übergebenen Parameter, zum Beispiel `/writeini $char($1) Inventar Gewicht %weight`, nicht `/writeini $char($nick) ...`.
+- `$nick` darf direkt im IRC-Event verwendet werden. Sobald die Verarbeitung an einen eigenen Helper übergeben wird, werden alle benötigten Werte ausdrücklich als Parameter weitergereicht.
+- Diese Regel gilt für alle Helper, die Spielerdateien lesen oder verändern, unter anderem `check.char`, `inventory.clear`, `inventory.weight.update` und weitere zukünftige Spielerdatei-Helper.
+
+Beispiel für die Übergabe aus einem Event:
+
+```mirc
+on *:TEXT:!drop all:#:{
+  var %nick = $nick
+  var %section = $check.char(%nick,Inventar)
+  if (%section == $null) { return }
+
+  ; Spielername ausdrücklich an den nächsten Helper übergeben
+  var %result = $inventory.clear(%nick)
+}
+```
+
+Beispiel innerhalb des aufgerufenen Helpers:
+
+```mirc
+alias inventory.clear {
+  ; $1 = Spielername
+  var %weight = $inventory.weight.update($1,reset)
+  /writeini $char($1) Inventar Gewicht %weight
+}
+```
+
+Diese Beispiele beschreiben den geplanten Aufbau und sind noch nicht als implementiert oder getestet zu verstehen.
