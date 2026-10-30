@@ -418,3 +418,65 @@ Dieser Abschnitt dokumentiert die bisher gemeinsam festgelegten Regeln für das 
 - Jede gemeinsam bestätigte Projektentscheidung wird zeitnah in dieser Projektdokumentation festgehalten, damit sowohl Projektverantwortlicher als auch Assistenz den aktuellen Stand in späteren Gesprächen zuverlässig wiederfinden können.
 - Dokumentierte Planungsentscheidungen sind klar von implementierten und getesteten Funktionen zu unterscheiden. Eine beschlossene Regel gilt nicht automatisch als programmiert.
 
+## 11. Allgemeiner Datenbank-Helfer `db.resolve`
+
+Dieser Helfer ist als zentraler, wiederverwendbarer Baustein für das Auflösen von Abschnittsnamen in den INI-basierten Spieldatenbanken vorgesehen. Er ist geplant, aber noch nicht in den Quellcode übernommen oder getestet.
+
+### Aufgabe
+
+- `db.resolve` erhält als ersten Parameter einen Datenbanktyp und als zweiten Parameter den gesuchten Abschnittsnamen.
+- Der Datenbanktyp wird intern einer festgelegten Datei zugeordnet:
+  - `tech` → `techniques.db`
+  - `weapon` → `weapons.db`
+  - `item` → `items.db`
+- Die Suche erfolgt über `$ini()` und ist unabhängig von Groß- und Kleinschreibung.
+- Wichtig: `$ini(Datei, Abschnittsname)` liefert die Position des gefundenen Abschnitts, nicht dessen Namen. Diese Position ist kein Zeilennummernwert.
+- Anschließend wird diese Position erneut an `$ini(Datei, Position)` übergeben. Dadurch wird der tatsächliche Abschnittsname in der Schreibweise der Datenbank zurückgegeben.
+- Bei einem unbekannten Datenbanktyp oder einem nicht vorhandenen Abschnitt gibt der Helfer ohne Rückgabewert `$null` zurück. Da das Verhalten von `$ini()` bei nicht gefundenen Abschnitten versionsabhängig `0` oder `$null` sein kann, werden beide Fälle abgefangen.
+- Der Helfer prüft ausschließlich, ob ein Abschnitt vorhanden ist, und gibt dessen tatsächlichen Namen zurück. Er prüft nicht, ob der Abschnitt inhaltlich eine gültige Item-, Waffen- oder Technikdefinition darstellt. Diese fachlichen Prüfungen bleiben Aufgabe der aufrufenden Funktion.
+
+### Vorgesehener Aufbau
+
+```mirc
+alias db.resolve {
+  ; Datenbanktyp zuordnen
+  var %dbfile = $null
+
+  if ($1 == tech) { %dbfile = techniques.db }
+  if ($1 == weapon) { %dbfile = weapons.db }
+  if ($1 == item) { %dbfile = items.db }
+
+  ; Unbekannten Datenbanktyp abfangen
+  if (%dbfile == $null) { return }
+
+  ; Position der gesuchten Section ermitteln
+  var %index = $ini($dbfile(%dbfile), $2)
+
+  ; Nicht vorhandene Section abfangen
+  if (%index == $null) || (%index == 0) { return }
+
+  ; Tatsächlichen Section-Namen zurückgeben
+  var %section = $ini($dbfile(%dbfile), %index)
+
+  return %section
+}
+```
+
+### Aufrufbeispiele
+
+```mirc
+var %item = $db.resolve(item, $2)
+var %weapon = $db.resolve(weapon, $2)
+var %tech = $db.resolve(tech, $2)
+```
+
+Beispiel: Steht in `Items.db` der Abschnitt `[RedKey]`, liefert `$db.resolve(item, redkey)` den Namen `RedKey` zurück. So können aufrufende Funktionen anschließend mit dem tatsächlichen Abschnittsnamen auf die zugehörigen Daten zugreifen.
+
+### Zuständigkeit und Erweiterbarkeit
+
+- `db.resolve` ist ein allgemeiner Datenbank-Helfer und nicht auf das Inventarsystem beschränkt.
+- Weitere Datenbanktypen können bei Bedarf durch eine zusätzliche Typzuordnung ergänzt werden, sofern ihre Dateien dieselbe INI-Abschnittsstruktur verwenden.
+- Die aufrufende Funktion muss den Rückgabewert auf `$null` prüfen und danach ihre eigenen fachlichen Prüfungen durchführen.
+- Der Helfer verändert weder Datenbankdateien noch Charakterdaten.
+- Die hier dokumentierte Fassung ist der gemeinsam bestätigte Planungsstand. Vor einer produktiven Verwendung muss sie im MSL-Quellcode implementiert und getestet werden.
+
