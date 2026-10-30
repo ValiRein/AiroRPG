@@ -316,3 +316,105 @@ Eine mögliche Inspiration durch Final Fantasy wurde erwähnt. Stil und konkrete
 
 - Der erste Prototyp umfasst Charakterregistrierung mit Charakterbeschreibung und Statuswerten, Standardausrüstung (Fäuste und `DoublePunch`), bis zu fünf zufällig ausgewählte einfache Monsterarten, ein grundlegendes rundenbasiertes Kampfsystem, Sieg und Niederlage, Auron-Belohnungen sowie externe Dateien für Kampf- und Systemmeldungen.
 - Die allgemeine Siegesserie jedes Spielenden soll bereits im Prototyp erfasst werden. Sie wird in der Charakterdatei unter `[Info]` als `BattleStreak` gespeichert, startet bei `0`, steigt bei jedem Sieg unabhängig von der Monsterart um `1` und wird bei einer normalen Niederlage oder bewussten Flucht auf `0` zurückgesetzt. Bei einer Flucht im laufenden System gelten die normalen Fluchtregeln. Ein Verbindungsabbruch, Bot-Absturz oder geplanter Bot-Neustart bricht den Kampf ohne Belohnung ab und setzt `BattleStreak` ebenfalls auf `0`. Sie bestimmt die Zielstärke neu erzeugter Monster: bei Siegesserie `0` ist die erste Zielstufe `1`; nach jedem Sieg soll die nächste Zielstufe zunächst beispielhaft um eine Stufe steigen. Die konkrete Skalierung von HP, STR, DEF, INT und SPD sowie die Abgleichung mit `$get.level($1)` bleiben offen und werden getestet. Spielende sollen auch bei einer Niederlage eine anteilige Auron-Belohnung für ihre Mühen erhalten; sie fällt geringer als die volle Belohnung für einen Sieg aus. Die genaue Berechnung bleibt offen.
+
+## 10. Inventarsystem – Planung und verbindliche Entscheidungen
+
+Dieser Abschnitt dokumentiert die bisher gemeinsam festgelegten Regeln für das Inventarsystem. Die Regeln beschreiben den Planungsstand; sie bedeuten noch nicht, dass die Funktionen bereits programmiert oder getestet wurden.
+
+### Aufbau der Items-Datenbank
+
+- Jedes Item wird vollständig in einem eigenen Abschnitt in `Items.db` definiert. Der Abschnittsname ist der Itemname, beispielsweise `[Heiltrank]`, `[Topaz]` oder `[RedKey]`.
+- Der Schlüssel `Type` bestimmt die Item-Art. Er legt sowohl die funktionale Behandlung des Gegenstands als auch seine Inventarkategorie fest.
+- Weitere Item-Eigenschaften werden im jeweiligen Item-Abschnitt hinterlegt, beispielsweise `Target`, `Amount`, `Desc`, `Weight`, `Cost`, `SellPrice` oder spezielle Eigenschaften wie `Unlocks`.
+- Die Bedeutung einzelner Felder hängt vom `Type` ab. Beispiel: Bei `Type=heal` ist `Amount=3` ein Prozentwert und bedeutet, dass 3 % der maximalen HP wiederhergestellt werden.
+- Der Abschnitt `[Items]` enthält unter anderem zentrale Listen wie `Gems` und `Keys`. Diese Listen sind keine Inventarkategorien und ersetzen keine Item-Definitionen. Sie dienen später als Prüf- beziehungsweise Registrierungslisten für besondere Funktionen, etwa die Prüfung, ob ein über `!use` angesprochener Schlüssel überhaupt als unterstützter Schlüssel existiert.
+- Jeder in einer solchen Liste aufgeführte Gegenstand muss zusätzlich einen eigenen vollständigen Abschnitt in `Items.db` besitzen. So werden beispielsweise Edelsteine mit `Type=gem` und Schlüssel mit `Type=key` als normale Items definiert und können gesammelt sowie im Spielerinventar gespeichert werden.
+- Beispielhafte Definitionen:
+  ```ini
+  [Topaz]
+  Type=gem
+  Cost=100
+  SellPrice=50
+  Desc=Ein kleiner Topas.
+  Weight=0.1
+
+  [RedKey]
+  Type=key
+  Unlocks=red
+  Cost=0
+  SellPrice=50
+  Desc=Ein kleiner roter Schlüssel. Er öffnet rote Truhen.
+  Weight=0.1
+  ```
+- Die Listen `Gems` und `Keys` behalten ihre spätere Sonderfunktion. Ihre konkreten Spielmechaniken werden erst geplant, wenn die zugehörigen Systeme wie Augments, Schlüsselverwendung, Truhen oder Dungeons anstehen.
+
+### Inventarkategorien und Anzeige
+
+- Die normale Inventarübersicht wird über `!inventar` aufgerufen.
+- Die normale Übersicht berücksichtigt fest und in dieser Reihenfolge ausschließlich die folgenden drei `Type`-Werte:
+  1. `heal` – Heilgegenstände beziehungsweise Heiltränke.
+  2. `damage` – Kampfgegenstände.
+  3. `misc` – Sammelgegenstände.
+- `misc` umfasst sammelbare Gegenstände und Rohstoffe, die unter anderem später für das Crafting-System verwendet werden. Auch diese Gegenstände müssen vollständig mit ihrem eigenen `Type` und ihren Eigenschaften in `Items.db` definiert sein.
+- Die Reihenfolge wird im Quellcode festgelegt, nicht über eine zusätzliche Prioritätsliste in `Items.db`.
+- Eine Kategorie wird in der normalen Übersicht nur angezeigt, wenn mindestens ein zugehöriger Gegenstand mit einer Menge größer als null vorhanden ist. Leere Kategorien werden vollständig ausgeblendet.
+- Innerhalb einer Kategorie werden die vorhandenen Gegenstände kompakt mit ihrer Menge in Klammern dargestellt, beispielsweise `Sammelgegenstände: Eisenerz(12) Kupfer(39) Silber(2)`.
+- Die Ausgabe enthält außerdem die aktuelle Traglast und die freie Traglast, beispielsweise:
+  ```text
+  [Inventar von Spieler]
+  Sammelgegenstände: Eisenerz(12) Kupfer(39) Silber(2)
+  Heiltränke: Heiltrank(3)
+  Kampfgegenstände: Dynamit(5)
+
+  Traglast: 42.5 / 100.0
+  Freier Platz: 57.5
+  ```
+- Edelsteine, Schlüssel und Monsterdrops gehören nicht in die normale `!inventar`-Anzeige. Für solche Sondertypen sind separate Listen im gleichen kompakten Format vorgesehen, beispielsweise `!gems`, `!keys` und `!drops`. Diese Befehle beziehungsweise Listen sind spätere Erweiterungen und gehören nicht zum aktuellen Inventar-Prototyp.
+- Der Inventar-Prototyp bleibt bewusst klein: Er umfasst zunächst `!inventar`, `!drop` sowie Beispielgegenstände der Typen `heal`, `damage` und `misc`. Schlüssel, Edelsteine, Monsterdrops, Dungeons, Truhen und ein Monster-Beutesystem werden in dieser Prototypstufe noch nicht umgesetzt.
+
+### Speicherung und Mengenverwaltung
+
+- Inventargegenstände werden in der Spielerdatei unter `[Inventar]` mit ihrer jeweiligen Menge gespeichert.
+- Ein einmal angelegter Item-Eintrag bleibt in der Spielerdatei bestehen, auch wenn seine Menge auf `0` sinkt. Der Eintrag wird nicht gelöscht.
+- Bei der Anzeige werden nur Einträge berücksichtigt, deren Item-Definition in `Items.db` existiert, deren `Type` zur jeweiligen Anzeige gehört und deren Menge größer als `0` ist. Ein Eintrag mit Menge `0` bleibt gespeichert, wird aber nicht in der Kategorie aufgelistet.
+- Wird ein Gegenstand zum ersten Mal erhalten und existiert noch kein Eintrag in der Spielerdatei, wird der Eintrag neu angelegt.
+- Existiert der Eintrag bereits – auch mit Menge `0` –, wird die vorhandene Menge ausgelesen, die neue Menge addiert und der Zahlenwert aktualisiert beziehungsweise überschrieben. Ein vorhandener Eintrag wird nicht erneut angelegt.
+- Beispiel: Aus `Eisenerz=20` wird nach dem vollständigen Verkauf `Eisenerz=0`. Beim späteren Sammeln von 8 Einheiten wird derselbe Eintrag auf `Eisenerz=8` aktualisiert.
+- Unterschiedliche Itemnamen erhalten jeweils eigene Einträge. Mengen desselben Itemnamens werden addiert und nicht gegenseitig überschrieben.
+
+### Traglast und Gewichtsberechnung
+
+- Die anfängliche maximale Traglast eines Standardcharakters beträgt 100 Gewichtseinheiten.
+- Das Einzelgewicht jedes Items wird aus dessen `Weight`-Wert in `Items.db` gelesen. Das Gesamtgewicht ergibt sich aus der Summe aus Menge mal Einzelgewicht aller gewichtspflichtigen Inventargegenstände.
+- Waffen und Rüstungen zählen nicht zur Traglast. Sie werden getrennt vom normalen Inventar gespeichert und belasten die Traglast nicht.
+- Nach jeder erfolgreich durchgeführten Inventaränderung wird das Gesamtgewicht vollständig anhand der aktuellen Inventarmengen und der Item-Gewichte aus `Items.db` neu berechnet und in der Spielerdatei aktualisiert. Das gilt unter anderem für Sammeln, Monsterbelohnungen, Kaufen, Verkaufen, Verwenden, Wegwerfen und Crafting-Verbrauch beziehungsweise Crafting-Ergebnis.
+- Die Gewichtsberechnung soll zentral als wiederverwendbarer Helfer umgesetzt werden, beispielsweise `inventory.weight.update($nick)`. Die aufrufenden Inventarfunktionen sollen nicht jeweils eine eigene Gewichtsberechnung enthalten.
+- Eine fehlgeschlagene oder abgelehnte Inventaraktion verändert weder die Gegenstandsmengen noch das gespeicherte Gesamtgewicht.
+- Die Traglastprüfung soll ebenfalls zentral umgesetzt werden. Der vorgesehene Aufruf verwendet den Spielernamen sowie lokale Variablen für Item und Menge, beispielsweise `inventory.capacity.check($nick,%item,%amount)`. `%item` und `%amount` sind dabei zuvor definierte Variablen der aufrufenden Funktion; sie sind keine automatisch vorhandenen Funktionen.
+- Als allgemeine zentrale Aufnahmefunktion ist `inventory.item.add($nick,%item,%amount)` vorgesehen. Sie soll die Item-Definition prüfen, die Traglast kontrollieren, einen noch nicht vorhandenen Eintrag anlegen oder einen bestehenden Mengenwert erhöhen und anschließend das Gesamtgewicht aktualisieren. Die genaue Rückgabe- und Fehlerstruktur wird beim Implementieren festgelegt.
+
+### Verhalten bei voller Traglast und Belohnungen
+
+- Eine Inventargutschrift ist nur möglich, wenn die vollständige aufzunehmende Menge in die noch freie Traglast passt.
+- Passt die vollständige Menge nicht hinein, wird die gesamte Aufnahme abgelehnt. Es gibt keine Teilgutschrift.
+- Das System entfernt oder reduziert niemals automatisch andere Gegenstände, um Platz zu schaffen. Es darf keine automatische Inventarbereinigung geben.
+- Die Spielenden sind selbst dafür verantwortlich, ausreichend Platz vorzuhalten. Sie können später beispielsweise Gegenstände verkaufen, wegwerfen, für Crafting verwenden oder ihre Traglast durch vorgesehene Charakterverbesserungen erhöhen.
+- Wird eine Monster- oder andere Belohnung wegen fehlender Traglast abgelehnt, wird der betreffende Gegenstand nicht gutgeschrieben und geht verloren. Andere unabhängige Belohnungsbestandteile bleiben davon unberührt: Bei einem Monsterkampf werden beispielsweise die verdienten Auron trotzdem ausgezahlt.
+- Auch wichtige Rohstoffe oder Questgegenstände können bei fehlender Traglast nicht aufgenommen werden. Das System erzwingt keine Gutschrift und entfernt keine anderen Gegenstände zugunsten der Belohnung.
+- Die Prüfung muss vor jeder Änderung erfolgen. Bei einer abgelehnten Aufnahme bleiben Inventarmengen und Gewicht unverändert.
+
+### Befehl `!drop`
+
+- Der Befehl zum Wegwerfen von Gegenständen lautet `!drop <Itemname> <Menge>`, beispielsweise `!drop Eisenerz 10`.
+- Vor dem Wegwerfen prüft der Bot, ob das Item in `Items.db` definiert ist, ob der Spieler es besitzt und ob die gewünschte Menge gültig und tatsächlich vorhanden ist.
+- Die Menge muss eine positive ganze Zahl größer als null sein. Null, negative Zahlen, Fließkommazahlen, Kommazahlen, Textwerte und sonstige nicht ganzzahlige Eingaben werden abgelehnt. Beispiele ungültiger Mengen sind `0`, `-5`, `2.5`, `2,5` und `Kupfer`.
+- Die Eingabeprüfung muss sicherstellen, dass die Mengenangabe tatsächlich ausschließlich eine gültige positive Ganzzahl ist. Extrem große beziehungsweise intern nicht sicher darstellbare Werte müssen ebenfalls abgefangen werden.
+- Ist die gewünschte Menge größer als der aktuelle Bestand, wird die gesamte Aktion abgebrochen. Der Bot nennt dem Spielenden den tatsächlichen Bestand, beispielsweise: `Du besitzt nicht so viel Eisenerz! Dein aktueller Bestand: 20 Stück.`
+- Bei erfolgreicher Ausführung wird die gewünschte Menge vom Bestand abgezogen. Der Eintrag bleibt auch bei Menge `0` in der Spielerdatei bestehen. Anschließend wird das Gesamtgewicht vollständig neu berechnet.
+- Fehlerhafte Eingaben oder fehlgeschlagene Prüfungen dürfen keine teilweise Änderung am Inventar verursachen.
+
+### Zusammenarbeit und Dokumentationspflicht
+
+- Jede gemeinsam bestätigte Projektentscheidung wird zeitnah in dieser Projektdokumentation festgehalten, damit sowohl Projektverantwortlicher als auch Assistenz den aktuellen Stand in späteren Gesprächen zuverlässig wiederfinden können.
+- Dokumentierte Planungsentscheidungen sind klar von implementierten und getesteten Funktionen zu unterscheiden. Eine beschlossene Regel gilt nicht automatisch als programmiert.
+
