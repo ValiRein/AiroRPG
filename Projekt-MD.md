@@ -466,7 +466,7 @@ alias db.resolve {
   var %index = $ini($dbfile(%dbfile), $2)
 
   ; Nicht vorhandene Section abfangen
-  if (%index == $null) || (%index == 0) { return }
+  if ((%index == $null) || (%index == 0)) { return }
 
   ; Tatsächlichen Section-Namen zurückgeben
   var %section = $ini($dbfile(%dbfile), %index)
@@ -491,5 +491,60 @@ Beispiel: Steht in `Items.db` der Abschnitt `[RedKey]`, liefert `$db.resolve(ite
 - Weitere Datenbanktypen können bei Bedarf durch eine zusätzliche Typzuordnung ergänzt werden, sofern ihre Dateien dieselbe INI-Abschnittsstruktur verwenden.
 - Die aufrufende Funktion muss den Rückgabewert auf `$null` prüfen und danach ihre eigenen fachlichen Prüfungen durchführen.
 - Der Helfer verändert weder Datenbankdateien noch Charakterdaten.
+- Die hier dokumentierte Fassung ist der gemeinsam bestätigte Planungsstand. Vor einer produktiven Verwendung muss sie im MSL-Quellcode implementiert und getestet werden.
+
+## 12. Spielerdatei-Helfer `check.char`
+
+Dieser Helfer prüft, ob eine angegebene Section in der Spielerdatei eines Nicknames existiert, und gibt bei Erfolg den tatsächlichen Section-Namen zurück. Er ist als allgemeiner Helfer für Befehle und andere Spielerfunktionen vorgesehen. Er ist geplant, aber noch nicht in den Quellcode übernommen oder getestet.
+
+### Aufgabe und Ablauf
+
+- Der erste Parameter ist der IRC-Nickname des Spielers.
+- Der zweite Parameter ist der gesuchte Section-Name.
+- Zuerst wird der Pfad zur Spielerdatei über `$char($1)` ermittelt.
+- Danach wird geprüft, ob die Spielerdatei existiert. Ist sie nicht vorhanden, gibt der Helfer ohne Rückgabewert `$null` zurück.
+- Anschließend wird mit `$ini()` die Position der gesuchten Section ermittelt.
+- Sowohl `$null` als auch `0` werden als nicht gefundene Section behandelt.
+- Bei erfolgreicher Suche wird über die Position erneut `$ini()` aufgerufen, um den tatsächlichen Section-Namen aus der Datei zurückzugeben.
+- Der Helfer führt selbst keine Spielaktion aus und verändert weder Spielerdatei noch Inventar. Der aufrufende Befehl entscheidet, wie er auf einen fehlenden Rückgabewert reagiert. Deshalb wird im Helfer kein `halt` verwendet.
+
+### Vorgesehener Aufbau
+
+```mirc
+alias check.char {
+  ; $1 = Spielername
+  ; $2 = Gesuchte Section
+
+  var %charfile = $char($1)
+
+  ; Spielerdatei prüfen
+  if (!$exists(%charfile)) { return }
+
+  ; Section-Index ermitteln
+  var %index = $ini(%charfile,$2)
+
+  ; Section prüfen
+  if ((%index == $null) || (%index == 0)) { return }
+
+  ; Tatsächlichen Section-Namen zurückgeben
+  var %section = $ini(%charfile,%index)
+
+  return %section
+}
+```
+
+### Aufrufbeispiel
+
+```mirc
+var %section = $check.char($nick,Inventar)
+```
+
+Der aufrufende Code muss prüfen, ob `%section` einen Rückgabewert enthält, bevor er mit der Section arbeitet. Beispielsweise kann `!drop all` den Helfer verwenden, um die Existenz von `[Inventar]` zu prüfen, bevor die Einträge dieser Section verarbeitet werden.
+
+### Zuständigkeit und Status
+
+- `check.char` prüft die Existenz der Spielerdatei und einer darin enthaltenen Section.
+- Der Helfer prüft nicht, ob die Section bestimmte Keys enthält oder ob deren Werte fachlich gültig sind. Solche Prüfungen bleiben Aufgabe des aufrufenden Codes.
+- Die Prüfung auf `$null` und `0` berücksichtigt unterschiedliche Rückgaben von `$ini()`, wenn eine Section nicht gefunden wird.
 - Die hier dokumentierte Fassung ist der gemeinsam bestätigte Planungsstand. Vor einer produktiven Verwendung muss sie im MSL-Quellcode implementiert und getestet werden.
 
