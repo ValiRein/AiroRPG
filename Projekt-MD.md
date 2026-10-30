@@ -410,8 +410,15 @@ Dieser Abschnitt dokumentiert die bisher gemeinsam festgelegten Regeln für das 
 - Die Menge muss eine positive ganze Zahl größer als null sein. Null, negative Zahlen, Fließkommazahlen, Kommazahlen, Textwerte und sonstige nicht ganzzahlige Eingaben werden abgelehnt. Beispiele ungültiger Mengen sind `0`, `-5`, `2.5`, `2,5` und `Kupfer`.
 - Die Eingabeprüfung muss sicherstellen, dass die Mengenangabe tatsächlich ausschließlich eine gültige positive Ganzzahl ist. Extrem große beziehungsweise intern nicht sicher darstellbare Werte müssen ebenfalls abgefangen werden.
 - Ist die gewünschte Menge größer als der aktuelle Bestand, wird die gesamte Aktion abgebrochen. Der Bot nennt dem Spielenden den tatsächlichen Bestand, beispielsweise: `Du besitzt nicht so viel Eisenerz! Dein aktueller Bestand: 20 Stück.`
-- Bei erfolgreicher Ausführung wird die gewünschte Menge vom Bestand abgezogen. Der Eintrag bleibt auch bei Menge `0` in der Spielerdatei bestehen. Anschließend wird das Gesamtgewicht vollständig neu berechnet.
-- Fehlerhafte Eingaben oder fehlgeschlagene Prüfungen dürfen keine teilweise Änderung am Inventar verursachen.
+- `!drop` darf grundsätzlich alle Gegenstände entfernen, die im normalen Spielerinventar geführt werden. Dazu gehören auch spätere Sondertypen wie Edelsteine, Schlüssel und Monsterbeute. Der Gegenstandstyp ist für die grundsätzliche Wegwerf-Funktion nicht ausschlaggebend.
+- Waffen und Rüstungen sind ausdrücklich von `!drop` ausgeschlossen. Sie werden getrennt vom normalen Inventar als spielerbezogene Ausrüstung geführt, zählen nicht zur Traglast und können bei Bedarf beim jeweiligen Händler verkauft werden. Ob eine Ausrüstung behalten oder verkauft wird, entscheidet allein der Spieler.
+- Vor dem tatsächlichen Wegwerfen wird eine zweistufige Sicherheitsbestätigung verlangt. Bei der ersten gültigen Eingabe werden alle regulären Prüfungen durchgeführt, aber noch keinerlei Inventardaten verändert.
+- Nach erfolgreicher erster Prüfung merkt sich das System vorübergehend nickbezogen den Gegenstand und die gewünschte Menge und fordert den Spieler auf, denselben `!drop`-Befehl innerhalb von **10 Sekunden** exakt erneut einzugeben.
+- Nur eine erneute Eingabe mit demselben Gegenstand und derselben Menge innerhalb dieses Zeitfensters gilt als Bestätigung. Eine abweichende Menge oder ein anderer Gegenstand bestätigt die vorgemerkte Aktion nicht.
+- Erfolgt innerhalb von 10 Sekunden keine passende Bestätigung, verfällt die vorgemerkte Aktion automatisch. Das Inventar bleibt unverändert; der Spieler kann den Befehl später erneut ausführen.
+- Erst nach passender Bestätigung werden die relevanten Prüfungen – insbesondere der aktuelle Besitz und die verfügbare Menge – erneut durchgeführt. Dadurch werden zwischenzeitliche Änderungen am Inventar berücksichtigt.
+- Bei erfolgreicher bestätigter Ausführung wird die gewünschte Menge vom Bestand abgezogen. Der Eintrag bleibt auch bei Menge `0` in der Spielerdatei bestehen. Anschließend wird das Gesamtgewicht vollständig neu berechnet.
+- Fehlerhafte Eingaben, abgelaufene Bestätigungen oder fehlgeschlagene Prüfungen dürfen keine teilweise Änderung am Inventar verursachen.
 
 ### Zusammenarbeit und Dokumentationspflicht
 
