@@ -561,13 +561,13 @@ Der aufrufende Code muss prüfen, ob der Helper einen Rückgabewert enthält, be
 
 ## 13. Spielerparameter in eigenen Helpern
 
-Für alle eigenen Helper gilt eine einheitliche Regel: Ein Helper darf sich nicht darauf verlassen, dass `$nick` verfügbar ist oder den richtigen Spieler bezeichnet. `$nick` gehört zum jeweiligen IRC-Event-Kontext, beispielsweise innerhalb eines `on *:TEXT:`-Events. Ein eigenständiger Alias muss dagegen unabhängig vom aufrufenden Kontext funktionieren.
+Für alle eigenen Helper gilt eine einheitliche Projektregel: Der Spielername wird ausdrücklich als Parameter übergeben und innerhalb des Helpers über `$1` beziehungsweise den dafür vorgesehenen Parameter verwendet. Technischer Hinweis: mIRC-Event-Identifier wie `$nick` können bei einem unmittelbar und synchron aus einem Event aufgerufenen Alias grundsätzlich weiterhin verfügbar sein. Darauf verlassen wir uns im Projekt dennoch nicht, damit Helper unabhängig vom Event-Kontext, wiederverwendbar und auch bei späteren verzögerten oder anderweitig gestarteten Abläufen zuverlässig funktionieren.
 
 - Der IRC-Event-Code liest den Spieler über `$nick` aus und übergibt ihn ausdrücklich als Parameter an den ersten Helper.
 - Innerhalb eines eigenen Aliases wird der übergebene Spielername über `$1` verwendet, sofern er der erste Parameter ist.
 - Ruft dieser Alias einen weiteren Helper auf, muss er den Spielernamen ausdrücklich weiterreichen, beispielsweise mit `$1`.
 - Schreibzugriffe auf Spielerdateien innerhalb eines Helpers verwenden daher den übergebenen Parameter, zum Beispiel `/writeini $char($1) Inventar Gewicht %weight`, nicht `/writeini $char($nick) ...`.
-- `$nick` darf direkt im IRC-Event verwendet werden. Sobald die Verarbeitung an einen eigenen Helper übergeben wird, werden alle benötigten Werte ausdrücklich als Parameter weitergereicht.
+- `$nick` darf direkt im IRC-Event verwendet werden. Obwohl der Event-Kontext bei einem direkten synchronen Alias-Aufruf grundsätzlich erhalten bleiben kann, werden beim Übergang in einen eigenen Helper alle benötigten Werte ausdrücklich als Parameter weitergereicht.
 - Diese Regel gilt für alle Helper, die Spielerdateien lesen oder verändern, unter anderem `check.char`, `inventory.clear`, `inventory.weight.update` und weitere zukünftige Spielerdatei-Helper.
 
 Beispiel für die Übergabe aus einem Event:
